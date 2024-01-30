@@ -30,8 +30,6 @@ const bookDetail = async (req, res) => {
     }
 }
 
-
-
 const addTofavorites = async (req, res) => {
     const bookId = req.params.id;
     try {

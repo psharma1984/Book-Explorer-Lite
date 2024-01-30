@@ -6,7 +6,7 @@ const generateAPI = async (apiKey) => {
         const apiUrl = `https://www.googleapis.com/books/v1/volumes?q=popular&key=${apiKey}`;
 
         const response = await axios.get(apiUrl);
-
+        console.log('number of items', response.data.totalItems.length)
         const externalBooks = response.data.items.map((item) => {
             return {
                 title: item.volumeInfo.title,

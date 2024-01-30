@@ -4,39 +4,26 @@
 <div>
   <p>Number of Favorites: <%= user.favorites.length %></p>
 </div>
-    <table id="books-table">
-      <tr id="books-table-header">
-        <th>Title</th>
-        <th>Author</th>
-        <th>Genres</th>
-        <th>Synopsis</th>
-        <th>Publication Date</th>
-        <th>Cover Image</th>
-        <th colspan="2"></th>
-      </tr>
-      <% if (books && books.length) { %>
+<div class="books-container">
+   <% if (books && books.length) { %>
         <% books.forEach((book) => { %>
-          <tr>
-            <td><%= book.title %></td>
-            <td><%= book.author %></td>
-            <td><%= book.genres.join(', ') %></td>
-            <td><%= book.synopsis %></td>
-            <td><%= book.publicationDate %></td>
-            <td><img src="<%= book.coverImage %>" alt="Book Cover" style="max-width: 100px;"></td>
-            <td>
+          <div class="books-box">
+            <div class="image-box">
+              <img src="<%= book.coverImage %>" alt="Book Cover" style="max-width: 100px;">
+            </div>
+            <span >
+              <%= book.title %>
               <form action="/books/favorites/<%= book._id %>" method="POST">
-                  <input type="hidden" name="_csrf" value="<%= _csrf %>">
-
-                <button type="submit">Add to Favorites</button>
+                <input type="hidden" name="_csrf" value="<%= _csrf %>">
+                <button type="submit">Favorites</button>
               </form>
-            </td>
-            <td><button type="button">delete</button></td>
-          </tr>
+            </span>
+          </div>  
         <% }) %>
       <% } else { %>
-        <tr>
-          <td colspan="8">No books available</td>
-        </tr>
+        <p>No books available
+        </p>
       <% } %>
-    </table>
+     </div> 
+     
 <%- include("partials/footer.ejs") %>
