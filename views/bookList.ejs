@@ -1,0 +1,42 @@
+<%- include("partials/head.ejs") %>
+<%- include("partials/header.ejs") %>
+<h2>Books List</h2>
+<div>
+  <p>Number of Favorites: <%= user.favorites.length %></p>
+</div>
+    <table id="books-table">
+      <tr id="books-table-header">
+        <th>Title</th>
+        <th>Author</th>
+        <th>Genres</th>
+        <th>Synopsis</th>
+        <th>Publication Date</th>
+        <th>Cover Image</th>
+        <th colspan="2"></th>
+      </tr>
+      <% if (books && books.length) { %>
+        <% books.forEach((book) => { %>
+          <tr>
+            <td><%= book.title %></td>
+            <td><%= book.author %></td>
+            <td><%= book.genres.join(', ') %></td>
+            <td><%= book.synopsis %></td>
+            <td><%= book.publicationDate %></td>
+            <td><img src="<%= book.coverImage %>" alt="Book Cover" style="max-width: 100px;"></td>
+            <td>
+              <form action="/favorites/<%= book._id %>" method="POST">
+                  <input type="hidden" name="_csrf" value="<%= _csrf %>">
+
+                <button type="submit">Add to Favorites</button>
+              </form>
+            </td>
+            <td><button type="button">delete</button></td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr>
+          <td colspan="8">No books available</td>
+        </tr>
+      <% } %>
+    </table>
+<%- include("partials/footer.ejs") %>
