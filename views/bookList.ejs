@@ -7,7 +7,7 @@
 <div class="books-container">
    <% if (books && books.length) { %>
         <% books.forEach((book) => { %>
-          <div class="books-box">
+          <div class="books-box" onclick="navigateToBookDetail('<%= book._id %>')">
             <div class="image-box">
               <img src="<%= book.coverImage %>" alt="Book Cover" style="max-width: 100px;">
             </div>
@@ -25,5 +25,11 @@
         </p>
       <% } %>
      </div> 
+     <script>
+      function navigateToBookDetail(bookId){
+        var bookDetailURL = '/books/'+ bookId;
+        window.location.href = bookDetailURL;
+      }
+     </script>
      
 <%- include("partials/footer.ejs") %>
