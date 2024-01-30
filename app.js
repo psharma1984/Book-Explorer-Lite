@@ -67,12 +67,15 @@ app.use(hostCsrf(csrf_options));
 app.use(require('connect-flash')());      //flash-messages configuration 
 app.use(require("./middlewares/storeLocals"));
 const auth = require("./middlewares/auth");
+
+//routes
 app.get("/", (req, res) => {
     res.render("index");
 });
 app.use("/sessions", require("./routes/sessionRoutes"));
 app.set('view engine', 'ejs');
-
+const bookRouter = require('./routes/Book');   //bookRouter
+app.use("/books", auth, bookRouter);
 //routes
 // app.get('/', (req, res) => {
 //     // Access sessionId

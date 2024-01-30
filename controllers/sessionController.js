@@ -57,5 +57,5 @@ module.exports = {
     logoff,
     logonShow,
     registerDo,
-    registerShow
+    registerShow,
 }
