@@ -30,11 +30,20 @@ if (app.get('env') === 'production') {
     app.set('trust proxy', 1); // trust first proxy
     sessionParams.cookie.secure = true; // serve secure cookies
 }
+app.use(session(sessionParams));
+//middlewares
+
+app.use(require('connect-flash'));      //flash-messages configuration 
 
 //routes
 app.get('/', (req, res) => {
+    // Access sessionId
+    const sessionId = req.sessionID;
+    console.log('Session ID:', sessionId);
+
     res.send('Hello, Book Explorer!');
 });
+
 
 //error handling middleware
 app.use((req, res) => {
