@@ -48,6 +48,7 @@ app.use(passport.session());
 
 app.use(require('connect-flash')());      //flash-messages configuration 
 app.use(require("./middlewares/storeLocals"));
+const auth = require("./middleware/auth");
 app.get("/", (req, res) => {
     res.render("index");
 });
