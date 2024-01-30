@@ -1,6 +1,6 @@
 const User = require('../models/User')
 const parseVErr = require("../utils/parseValidationErr");
-//const csrf = require('host-csrf');
+const csrf = require('host-csrf');
 
 const registerShow = (req, res) => {
     res.render('register')
@@ -14,7 +14,9 @@ const registerDo = async (req, res, next) => {
     }
 
     try {
-        await User.create(req.body)
+        if (!validation_errors) {
+            await User.create(req.body)
+        }
     } catch (e) {
         if (e.constructor.name === "ValidationError") {
             parseVErr(e, req);
@@ -39,7 +41,7 @@ const logoff = (req, res) => {
         if (err) {
             console.log(err);
         }
-        //csrf.refresh(req, res);
+        csrf.refresh(req, res);
         res.redirect("/");
     });
 };
