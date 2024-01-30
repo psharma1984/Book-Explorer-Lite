@@ -3,7 +3,33 @@ require("express-async-errors");
 
 const app = express()
 
-require('dotenv').config();     // to load the .env file into the process.env object
+require('dotenv').config();
+
+//session configuration
+const session = require("express-session");
+const MongoDBStore = require('connect-mongodb-session')(session); // to store session data in mongoDb
+const url = process.env.MONGO_URI;
+
+const store = new MongoDBStore({
+    uri: url,
+    collection: 'sessions',
+});
+store.on('error', function (error) {
+    console.log(error);
+});
+
+const sessionParams = {
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: true,
+    store: store,
+    cookie: { secure: false, sameSite: "strict" },
+};
+
+if (app.get('env') === 'production') {
+    app.set('trust proxy', 1); // trust first proxy
+    sessionParams.cookie.secure = true; // serve secure cookies
+}
 
 //routes
 app.get('/', (req, res) => {
