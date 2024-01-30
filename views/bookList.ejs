@@ -24,7 +24,7 @@
             <td><%= book.publicationDate %></td>
             <td><img src="<%= book.coverImage %>" alt="Book Cover" style="max-width: 100px;"></td>
             <td>
-              <form action="/favorites/<%= book._id %>" method="POST">
+              <form action="/books/favorites/<%= book._id %>" method="POST">
                   <input type="hidden" name="_csrf" value="<%= _csrf %>">
 
                 <button type="submit">Add to Favorites</button>
