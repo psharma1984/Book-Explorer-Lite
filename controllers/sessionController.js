@@ -12,6 +12,7 @@ const registerDo = async (req, res, next) => {
         req.flash("error", "The passwords entered do not match.");
         validation_errors = true;
     }
+
     try {
         await User.create(req.body)
     } catch (e) {

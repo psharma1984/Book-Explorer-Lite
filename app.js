@@ -5,6 +5,10 @@ const app = express()
 
 require('dotenv').config();
 
+//body-parser
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 //session configuration
 const session = require("express-session");
 const MongoDBStore = require('connect-mongodb-session')(session); // to store session data in mongoDb
@@ -31,18 +35,33 @@ if (app.get('env') === 'production') {
     sessionParams.cookie.secure = true; // serve secure cookies
 }
 app.use(session(sessionParams));
+
+//passport configuration
+const passport = require("passport");
+const passportInit = require("./passport/passportInit");
+
+passportInit();
+app.use(passport.initialize());
+app.use(passport.session());
+
 //middlewares
 
-app.use(require('connect-flash'));      //flash-messages configuration 
+app.use(require('connect-flash')());      //flash-messages configuration 
+app.use(require("./middlewares/storeLocals"));
+app.get("/", (req, res) => {
+    res.render("index");
+});
+app.use("/sessions", require("./routes/sessionRoutes"));
+app.set('view engine', 'ejs');
 
 //routes
-app.get('/', (req, res) => {
-    // Access sessionId
-    const sessionId = req.sessionID;
-    console.log('Session ID:', sessionId);
+// app.get('/', (req, res) => {
+//     // Access sessionId
+//     const sessionId = req.sessionID;
+//     console.log('Session ID:', sessionId);
 
-    res.send('Hello, Book Explorer!');
-});
+//     res.send('Hello, Book Explorer!');
+// });
 
 
 //error handling middleware
@@ -61,6 +80,7 @@ const port = process.env.PORT || 3000;
 
 const start = async () => {
     try {
+        await require("./db/connect")(process.env.MONGO_URI);
         app.listen(port, () =>
             console.log(`Server is listening on port ${port}...`)
         );
