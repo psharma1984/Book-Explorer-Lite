@@ -24,10 +24,10 @@ const UserSchema = new mongoose.Schema({
         required: true
     },
 
-    // favorites: [{
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Book'
-    // }],
+    favorites: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Book'
+    }],
 
 }, { timestamps: true });
 
