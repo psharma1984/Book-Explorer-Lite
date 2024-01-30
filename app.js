@@ -3,7 +3,7 @@ require("express-async-errors");
 
 const app = express()
 
-require('dotenv').config();
+require('dotenv').config();     // to load the .env file into the process.env object
 
 //routes
 app.get('/', (req, res) => {
