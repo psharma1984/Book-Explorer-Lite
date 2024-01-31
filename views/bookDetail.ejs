@@ -1,0 +1,25 @@
+<%- include("partials/head.ejs") %>
+<%- include("partials/header.ejs") %>
+  <p><%= user.name.toUpperCase() %>'s favorites: <%= user.favorites.length %></p>
+
+<h2> <%= book.title %></h2>
+
+<div class="image-box">
+              <img src="<%= book.coverImage %>" alt="Book Cover" style="max-width: 100px;">
+            </div>
+            <%= book.genres.join(', ') %>
+            <br/>
+<%= book.synopsis %>
+<br />
+<%= book.author%>
+<br />
+
+<%= book.publicationDate %>
+<form action="/books/favorites/<%= book._id %>" method="POST">
+                <input type="hidden" name="_csrf" value="<%= _csrf %>">
+                <button type="submit">Favorites</button>
+              </form>
+
+
+
+<%- include("partials/footer.ejs") %>

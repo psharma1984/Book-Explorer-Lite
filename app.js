@@ -66,6 +66,7 @@ app.use(hostCsrf(csrf_options));
 
 app.use(require('connect-flash')());      //flash-messages configuration 
 app.use(require("./middlewares/storeLocals"));
+app.use(express.static('public'));
 const auth = require("./middlewares/auth");
 
 //routes

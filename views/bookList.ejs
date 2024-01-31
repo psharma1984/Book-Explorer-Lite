@@ -1,42 +1,56 @@
 <%- include("partials/head.ejs") %>
 <%- include("partials/header.ejs") %>
+<!-- Search Form -->
+<form action="/books/search" method="POST">
+    <input type="hidden" name="_csrf" value="<%= _csrf %>">
+    <input type="text" name="search" placeholder="Search...">
+    <button type="submit">Search</button>
+</form>
+
 <h2>Books List</h2>
 <div>
   <p>Number of Favorites: <%= user.favorites.length %></p>
 </div>
-    <table id="books-table">
-      <tr id="books-table-header">
-        <th>Title</th>
-        <th>Author</th>
-        <th>Genres</th>
-        <th>Synopsis</th>
-        <th>Publication Date</th>
-        <th>Cover Image</th>
-        <th colspan="2"></th>
-      </tr>
-      <% if (books && books.length) { %>
-        <% books.forEach((book) => { %>
-          <tr>
-            <td><%= book.title %></td>
-            <td><%= book.author %></td>
-            <td><%= book.genres.join(', ') %></td>
-            <td><%= book.synopsis %></td>
-            <td><%= book.publicationDate %></td>
-            <td><img src="<%= book.coverImage %>" alt="Book Cover" style="max-width: 100px;"></td>
-            <td>
+<div class="books-container">
+   <% if (books && books.length) { %>
+           <% const displayBooks = books.slice(0, 20); %>
+        <% displayBooks.forEach((book) => { %>
+          <div class="books-box" onclick="navigateToBookDetail('<%= book._id %>')">
+            <div class="image-box">
+              <img src="<%= book.coverImage %>" alt="Book Cover" style="max-width: 100px;">
+            </div>
+            <span >
+              <%= book.title %>
               <form action="/books/favorites/<%= book._id %>" method="POST">
-                  <input type="hidden" name="_csrf" value="<%= _csrf %>">
-
-                <button type="submit">Add to Favorites</button>
+                <input type="hidden" name="_csrf" value="<%= _csrf %>">
+                <button type="submit">Favorites</button>
               </form>
-            </td>
-            <td><button type="button">delete</button></td>
-          </tr>
+            </span>
+          </div>  
         <% }) %>
+        <!-- Pagination Controls -->
+        <div class="pagination">
+        <% if (currentPage > 1) { %>
+            <a href="?page=<%= currentPage - 1 %>">Previous</a>
+        <% } %>
+
+        Page <%= currentPage %> of <%= totalPages %>
+
+        <% if (currentPage < totalPages) { %>
+            <a href="?page=<%= currentPage + 1 %>">Next</a>
+        <% } %>
+
+        </div>
       <% } else { %>
-        <tr>
-          <td colspan="8">No books available</td>
-        </tr>
+        <p>No books available
+        </p>
       <% } %>
-    </table>
+     </div> 
+     <script>
+      function navigateToBookDetail(bookId){
+        var bookDetailURL = '/books/'+ bookId;
+        window.location.href = bookDetailURL;
+      }
+     </script>
+     
 <%- include("partials/footer.ejs") %>

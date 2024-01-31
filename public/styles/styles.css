@@ -1,0 +1,51 @@
+.books-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.books-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 17%;
+  border-radius: 30px 2px;
+  padding: 25px;
+  margin: 10px;
+  margin-bottom: 80px;
+  border: 3px solid rgb(70, 56, 56);
+  transition: transform 0.3s ease-in-out;
+  background-color: rgb(247, 241, 234);
+}
+
+.books-box:hover {
+  transform: scale(1.1);
+  background-color: rgb(181, 192, 192); /* Adjust the scale factor as needed */
+  /*border: 3px solid rgb(70, 56, 56); /* Maintain the border on hover */
+}
+
+.image-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+}
+
+.image-box img {
+  height: 100%;
+  width: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.books-box span {
+  font-size: small;
+  white-space: nowrap; /* Prevent text from wrapping to the next line */
+  overflow: hidden; /* Hide any content that overflows the box */
+  text-overflow: ellipsis; /* Display an ellipsis (...) when text is truncated */
+  text-decoration: underline;
+  max-width: 100%;
+  align-items: center;
+}

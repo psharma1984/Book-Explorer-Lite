@@ -5,13 +5,14 @@ const Book = require('../models/Book');
 const {
     bookDetail,
     bookList,
-    addTofavorites
+    addTofavorites,
+    searchBook
 } = require('../controllers/Book');
 
 router.route('/').get(bookList);
 router.route('/favorites/:id').post(addTofavorites)
 router.route('/:id').get(bookDetail)
+router.route('/search').post(searchBook)
 // Route to display detailed information about a selected book
-router.get('/books/:id',);
 
 module.exports = router;
