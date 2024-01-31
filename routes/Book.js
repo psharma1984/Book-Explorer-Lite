@@ -12,7 +12,7 @@ const {
 router.route('/').get(bookList);
 router.route('/favorites/:id').post(addTofavorites)
 router.route('/:id').get(bookDetail)
-router.route('/search').get(searchBook)
+router.route('/search').post(searchBook)
 // Route to display detailed information about a selected book
 
 module.exports = router;
