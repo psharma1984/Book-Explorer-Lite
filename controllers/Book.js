@@ -79,9 +79,7 @@ const addTofavorites = async (req, res) => {
 const searchBook = async (req, res) => {
     try {
         const query = req.body.search;
-        console.log(query)
         const searchResults = await Book.find({ title: { $regex: new RegExp(query, 'i') } });
-        //console.log(searchResults)
         res.render('searchResults', { results: searchResults, query });
     } catch (error) {
         console.error(error);
