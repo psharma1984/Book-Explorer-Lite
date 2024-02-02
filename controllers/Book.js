@@ -86,9 +86,32 @@ const searchBook = async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 }
+
+const favoriteList = async (req, res) => {
+    try {
+        const user = req.user
+        const favoriteBooks = user.favorites
+        const results = await Book.find({ _id: { $in: favoriteBooks } })
+        res.render('favoriteList', { results })
+    } catch (error) {
+        console.log(error)
+        res.status(500).send('Internal Server Error');
+    }
+}
+
+const featuredBooks = async (req, res) => {
+    try {
+        const books = await Book.aggregate([{ $sample: { size: 12 } }]);
+        res.render('index', { books });
+    } catch (error) {
+        console.error('Error fetching random books:', error);
+    }
+}
 module.exports = {
     bookDetail,
     bookList,
     addTofavorites,
     searchBook,
+    favoriteList,
+    featuredBooks,
 }

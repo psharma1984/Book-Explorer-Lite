@@ -37,6 +37,7 @@ UserSchema.pre('save', async function () {
 });
 
 UserSchema.methods.comparePassword = async function (candidatePassword) {
+    console.log("Stored hashed password:", this.password);
     const isMatch = await bcrypt.compare(candidatePassword, this.password);
     return isMatch;
 };

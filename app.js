@@ -1,4 +1,7 @@
 const express = require('express')
+const path = require('path');
+const { featuredBooks } = require('./controllers/Book')
+
 require("express-async-errors");
 
 const app = express()
@@ -66,13 +69,11 @@ app.use(hostCsrf(csrf_options));
 
 app.use(require('connect-flash')());      //flash-messages configuration 
 app.use(require("./middlewares/storeLocals"));
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 const auth = require("./middlewares/auth");
 
 //routes
-app.get("/", (req, res) => {
-    res.render("index");
-});
+app.get("/", featuredBooks);
 app.use("/sessions", require("./routes/sessionRoutes"));
 app.set('view engine', 'ejs');
 const bookRouter = require('./routes/Book');   //bookRouter

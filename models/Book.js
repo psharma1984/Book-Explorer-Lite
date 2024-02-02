@@ -13,6 +13,7 @@ const BookSchema = new mongoose.Schema({
     publicationDate: { type: Date },
 
     coverImage: { type: String },
+    quote: { type: String },
 
 }, { timestamps: true });
 

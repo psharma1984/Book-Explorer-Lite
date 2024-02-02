@@ -1,9 +1,28 @@
+html,
+body {
+  font-family: Arial, sans-serif;
+  background-image: url("../images/book-library-with-open-textbook.jpg");
+  background-repeat: repeat;
+  background-size: cover;
+  color: aliceblue;
+  margin: 0;
+  padding: 20px;
+  height: 100%;
+}
+form label {
+  color: white !important;
+}
+.navbar-brand:hover {
+  color: gray !important; /* Change to your desired hover color */
+}
 .books-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
 }
-
+.img-fluid:hover {
+  transform: scale(1.1);
+}
 .books-box {
   display: flex;
   flex-direction: column;
