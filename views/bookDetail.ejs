@@ -34,10 +34,17 @@
       </div>         
   </div>
 
+  <!-- Ratings Stars -->
   <div class="col-sm-8 text-start bg-light p-2 text-dark bg-opacity-50">
     <h1 class="h1 fw-bold"> <%= book.title %></h1>
     <h4><%= book.author%></h4>
-    <h4> Rating: <%= book.rating %></h4>
+    <div class="rating fw-large">
+      <% const roundedRating = Math.ceil(book.rating); %>
+      <% for (let i = 1; i <= 5; i++) { %>
+        <i class="fa-sharp fa-star text-danger <%= i <= roundedRating ? 'fa-solid' : 'fa-regular' %>"></i>
+      <% } %><span class="fw-bold fs-2"><%= book.rating%></span>
+    </div>
+
     <br/>
     <p class="fw-medium"><%= book.synopsis %></p>    
     <br />
