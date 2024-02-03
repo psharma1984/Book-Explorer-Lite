@@ -5,12 +5,11 @@ const Book = require('../models/Book');
 const createReview = async (req, res) => {
     try {
         const bookId = req.params.id;
-        console.log(bookId)
         const userId = req.user; // Retrieve user ID from the form
-        console.log(userId)
         const comment = req.body.comment;
         const user = await User.findById(userId);
         const book = await Book.findById(bookId);
+
 
         if (!user || !book) {
             throw new Error('User or book not found');
@@ -30,6 +29,20 @@ const createReview = async (req, res) => {
             });
             await newReview.save();
         }
+
+        // recalculate and update the rating
+        const reviews = await Review.find({ bookId: bookId });
+        const maxValueRating = 10; //no. of comments that give rating 5.
+        const totalComments = reviews.reduce((total, review) => total + review.comment.length, 0);
+
+        const newRating = Math.min((totalComments / maxValueRating) * 5, 5);   //keeps rating between 0-5
+
+        // Update the rating field in the Book model
+        await Book.findOneAndUpdate(
+            { _id: bookId },
+            { $set: { rating: newRating } }
+        );
+
         req.flash('info', 'Review submitted successfully');
         res.redirect(`/books/${bookId}`);
     } catch (error) {

@@ -55,9 +55,7 @@ const bookDetail = async (req, res) => {
         if (!book) {
             return res.status(404).send('Book not found');
         }
-
         const reviews = await Review.find({ bookId: bookId }).populate('user');
-        console.log(reviews)
         res.render('bookDetail', { book, reviews });
     } catch (error) {
         console.error(error);
@@ -115,6 +113,7 @@ const featuredBooks = async (req, res) => {
         console.error('Error fetching random books:', error);
     }
 }
+
 module.exports = {
     bookDetail,
     bookList,
