@@ -51,7 +51,6 @@ const bookDetail = async (req, res) => {
     try {
         const bookId = req.params.id;
         const book = await Book.findById(bookId);
-        console.log(book)
         if (!book) {
             return res.status(404).send('Book not found');
         }
@@ -62,7 +61,6 @@ const bookDetail = async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 }
-
 
 const addTofavorites = async (req, res) => {
     const bookId = req.params.id;
@@ -107,7 +105,6 @@ const featuredBooks = async (req, res) => {
     try {
         const books = await Book.aggregate([{ $sample: { size: 12 } }]);
         const authors = await Book.distinct('author')
-        console.log(authors)
         res.render('index', { books });
     } catch (error) {
         console.error('Error fetching random books:', error);

@@ -43,8 +43,8 @@ const createReview = async (req, res) => {
             { $set: { rating: newRating } }
         );
 
-        req.flash('info', 'Review submitted successfully');
-        res.redirect(`/books/${bookId}`);
+        req.flash('success', 'Review submitted successfully');
+        res.redirect(`/books/${bookId}?success=Review submitted successfully`);
     } catch (error) {
         console.error('Error creating review:', error);
         throw error;
