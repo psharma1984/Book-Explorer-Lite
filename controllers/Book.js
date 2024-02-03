@@ -1,5 +1,6 @@
 const Book = require('../models/Book')
 const User = require('../models/User')
+const Review = require('../models/Review')
 const parseVErr = require("../utils/parseValidationErr");
 const generateAPI = require('../utils/externalAPI');
 
@@ -48,11 +49,16 @@ const bookList = async (req, res) => {
 
 const bookDetail = async (req, res) => {
     try {
-        const book = await Book.findById(req.params.id);
+        const bookId = req.params.id;
+        const book = await Book.findById(bookId);
+        console.log(book)
         if (!book) {
             return res.status(404).send('Book not found');
         }
-        res.render('bookDetail', { book });
+
+        const reviews = await Review.find({ bookId: bookId }).populate('user');
+        console.log(reviews)
+        res.render('bookDetail', { book, reviews });
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
@@ -102,6 +108,8 @@ const favoriteList = async (req, res) => {
 const featuredBooks = async (req, res) => {
     try {
         const books = await Book.aggregate([{ $sample: { size: 12 } }]);
+        const authors = await Book.distinct('author')
+        console.log(authors)
         res.render('index', { books });
     } catch (error) {
         console.error('Error fetching random books:', error);
