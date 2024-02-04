@@ -13,7 +13,7 @@ const bookList = async (req, res) => {
         }
         //pagination feature
         const page = parseInt(req.query.page) || 1
-        const maxResults = 20     //number of books to be displayed on a page
+        const maxResults = 24     //number of books to be displayed on a page
 
         // Perform pagination to get a subset of books for the requested page
         const startIndex = (page - 1) * maxResults;
@@ -63,14 +63,38 @@ const bookDetail = async (req, res) => {
 }
 
 const addTofavorites = async (req, res) => {
-    const bookId = req.params.id;
     try {
         const user = req.user
+        const bookId = req.params.id;
+
         if (!user.favorites.includes(bookId)) {
             user.favorites.push(bookId)
             await user.save()
         }
-        res.redirect('/books') // Redirect back to the books list page
+        // Store the referring URL in the session
+        req.session.referringUrl = req.headers.referer || '/books';
+        res.redirect(req.session.referringUrl) // Redirect back to the referring url
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+}
+
+const deleteFavorite = async (req, res) => {
+    try {
+        const user = req.user
+        const bookId = req.params.id;
+
+        const indexToRemove = user.favorites.indexOf(bookId);
+        if (indexToRemove !== -1) {
+            // Remove the element at the specified index
+            user.favorites.splice(indexToRemove, 1);
+            await user.save();
+        }
+        // Store the referring URL in the session
+        req.session.referringUrl = req.headers.referer || '/books';
+        res.redirect(req.session.referringUrl) // Redirect back to the referring url
 
     } catch (error) {
         console.error(error);
@@ -118,4 +142,5 @@ module.exports = {
     searchBook,
     favoriteList,
     featuredBooks,
+    deleteFavorite,
 }

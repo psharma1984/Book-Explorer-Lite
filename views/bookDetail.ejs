@@ -10,11 +10,14 @@
       <br/>
 
       <!-- Favorite Section -->
-
-      <form id="favoriteForm" action="/books/favorites/<%= book._id %>" method="POST">
-        <input type="hidden" name="_csrf" value="<%= _csrf %>">
-        <button type="submit" id="favoriteButton" class="btn btn-success">Mark as Favorite</button>
-      </form>
+      <% if (user && user.favorites.includes(book._id)) { %>
+        <button type="submit" class="btn btn-secondary align-self-center" disabled>One of favorites</button>
+      <% } else { %>
+        <form id="favoriteForm" action="/books/favorites/<%= book._id %>" method="POST">
+          <input type="hidden" name="_csrf" value="<%= _csrf %>">
+          <button type="submit" id="favoriteButton" class="btn btn-success">Mark as Favorite</button>
+        </form>
+      <% } %>
 
       <!-- Reviews Section -->
       <div class="mt-3">
