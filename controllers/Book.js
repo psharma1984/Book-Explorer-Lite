@@ -1,5 +1,6 @@
 const Book = require('../models/Book')
 const User = require('../models/User')
+const Review = require('../models/Review')
 const parseVErr = require("../utils/parseValidationErr");
 const generateAPI = require('../utils/externalAPI');
 
@@ -12,7 +13,7 @@ const bookList = async (req, res) => {
         }
         //pagination feature
         const page = parseInt(req.query.page) || 1
-        const maxResults = 20     //number of books to be displayed on a page
+        const maxResults = 24     //number of books to be displayed on a page
 
         // Perform pagination to get a subset of books for the requested page
         const startIndex = (page - 1) * maxResults;
@@ -48,27 +49,52 @@ const bookList = async (req, res) => {
 
 const bookDetail = async (req, res) => {
     try {
-        const book = await Book.findById(req.params.id);
+        const bookId = req.params.id;
+        const book = await Book.findById(bookId);
         if (!book) {
             return res.status(404).send('Book not found');
         }
-        res.render('bookDetail', { book });
+        const reviews = await Review.find({ bookId: bookId }).populate('user');
+        res.render('bookDetail', { book, reviews });
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
     }
 }
 
-
 const addTofavorites = async (req, res) => {
-    const bookId = req.params.id;
     try {
         const user = req.user
+        const bookId = req.params.id;
+
         if (!user.favorites.includes(bookId)) {
             user.favorites.push(bookId)
             await user.save()
         }
-        res.redirect('/books') // Redirect back to the books list page
+        // Store the referring URL in the session
+        req.session.referringUrl = req.headers.referer || '/books';
+        res.redirect(req.session.referringUrl) // Redirect back to the referring url
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+}
+
+const deleteFavorite = async (req, res) => {
+    try {
+        const user = req.user
+        const bookId = req.params.id;
+
+        const indexToRemove = user.favorites.indexOf(bookId);
+        if (indexToRemove !== -1) {
+            // Remove the element at the specified index
+            user.favorites.splice(indexToRemove, 1);
+            await user.save();
+        }
+        // Store the referring URL in the session
+        req.session.referringUrl = req.headers.referer || '/books';
+        res.redirect(req.session.referringUrl) // Redirect back to the referring url
 
     } catch (error) {
         console.error(error);
@@ -86,9 +112,35 @@ const searchBook = async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 }
+
+const favoriteList = async (req, res) => {
+    try {
+        const user = req.user
+        const favoriteBooks = user.favorites
+        const results = await Book.find({ _id: { $in: favoriteBooks } })
+        res.render('favoriteList', { results })
+    } catch (error) {
+        console.log(error)
+        res.status(500).send('Internal Server Error');
+    }
+}
+
+const featuredBooks = async (req, res) => {
+    try {
+        const books = await Book.aggregate([{ $sample: { size: 12 } }]);
+        const authors = await Book.distinct('author')
+        res.render('index', { books });
+    } catch (error) {
+        console.error('Error fetching random books:', error);
+    }
+}
+
 module.exports = {
     bookDetail,
     bookList,
     addTofavorites,
     searchBook,
+    favoriteList,
+    featuredBooks,
+    deleteFavorite,
 }

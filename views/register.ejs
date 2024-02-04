@@ -1,28 +1,37 @@
 <%- include("partials/head.ejs") %>
 <%- include("partials/header.ejs") %>
-<form method="POST">
-    <input type="hidden" name="_csrf" value="<%= _csrf %>">
-  <div>
-    <label name="name">Enter your name:</label>
-    <input name="name" />
+<div class="container">
+<div class="row">
+  <div class="col-sm-6">
+    <form method="POST">
+        <input type="hidden" name="_csrf" value="<%= _csrf %>">
+      <div class="mb-3">
+        <label class="form-label" name="name">Enter your name:</label>
+        <input class="form-control" name="name" />
+      </div>
+      <div class="mb-3">
+        <label class="form-label" name="email">Enter your email:</label>
+        <input class="form-control"name="email" />
+      </div>
+      <div class="mb-3">
+        <label class="form-label" name="password">Enter your password:</label>
+        <input class="form-control" type="password" name="password" />
+      </div>
+      <div class="mb-3">
+        <label class="form-label" name="password1">Confirm your password:</label>
+        <input class="form-control" type="password" name="password1" />
+      </div>
+      <div>
+        <button class="btn btn-primary">Register</button>
+        <a href="/">
+          <button class="btn btn-secondary" type="button">Cancel</button>
+        </a>
+      </div>
+    </form>
   </div>
-  <div>
-    <label name="email">Enter your email:</label>
-    <input name="email" />
+  <div class="col-sm-6">
+      <!-- Content for the second column -->
   </div>
-  <div>
-    <label name="password">Enter your password:</label>
-    <input type="password" name="password" />
-  </div>
-  <div>
-    <label name="password1">Confirm your password:</label>
-    <input type="password" name="password1" />
-  </div>
-  <div>
-    <button>Register</button>
-    <a href="/">
-      <button type="button">Cancel</button>
-    </a>
-  </div>
-</form>
+</div>
+</div>
 <%- include("partials/footer.ejs") %>

@@ -13,6 +13,10 @@ const BookSchema = new mongoose.Schema({
     publicationDate: { type: Date },
 
     coverImage: { type: String },
+    rating: {
+        type: Number,
+        default: 0, // Default to 0 if no reviews are available yet
+    },
 
 }, { timestamps: true });
 

@@ -1,9 +1,9 @@
-<h1>Book Explorer Lite</h1>
+<h1 style="text-align: center; color:white">Book Explorer Lite</h1>
 <% if (user) { %>
    <p>User <%= user.name %> is logged on.</p>
    <form method="POST" action="/sessions/logoff">
          <input type="hidden" name="_csrf" value="<%= _csrf %>">
-   <button>Logoff</button>
+   <button class="btn btn-secondary">Logoff</button>
    </form>
 <% } %>
 <% if (errors) {
@@ -13,5 +13,9 @@
 <% if(info){
     info.forEach((msg)=> { %>
         <div>Info: <%= msg%> </div>
+<%  }) }%>
+<% if(success){
+    success.forEach((msg)=> { %>
+        <div>Success: <%= msg%> </div>
 <%  }) }%>
 <hr />

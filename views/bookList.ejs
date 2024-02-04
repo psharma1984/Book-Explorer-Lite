@@ -2,55 +2,77 @@
 <%- include("partials/header.ejs") %>
 <!-- Search Form -->
 <form action="/books/search" method="POST">
+    <div class="row g-3 align-items-center">
     <input type="hidden" name="_csrf" value="<%= _csrf %>">
-    <input type="text" name="search" placeholder="Search...">
-    <button type="submit">Search</button>
-</form>
+      <div class="col-auto">
+        <input type="text" class="form-control" name="search" placeholder="Search...">
+      </div>
+      <div class="col-auto">
+        <button type="submit" class="btn btn-secondary">Search</button>    </div>
+      </div>
+    </div>
+  </form>
 
-<h2>Books List</h2>
+<!-- Favorite List-->
 <div>
-  <p>Number of Favorites: <%= user.favorites.length %></p>
+  <p><a href="/books/favoriteList" > Favorites</a></p>
 </div>
-<div class="books-container">
-   <% if (books && books.length) { %>
-           <% const displayBooks = books.slice(0, 20); %>
-        <% displayBooks.forEach((book) => { %>
-          <div class="books-box" onclick="navigateToBookDetail('<%= book._id %>')">
-            <div class="image-box">
-              <img src="<%= book.coverImage %>" alt="Book Cover" style="max-width: 100px;">
+
+<div class="container">
+  <% if (books && books.length) { %>
+    <div class="row">
+      <% for (let i = 0; i < books.length; i += 6) { %>
+        <div class="row mb-3">
+          <% for (let j = i; j < i + 6 && j < books.length; j++) { %>
+            <div class="col-12 col-md-4 col-lg-2 mb-3 d-flex flex-column align-items-center justify-content-center">   
+              <div class="mb-3">
+                <div class="d-flex align-items-center justify-content-center" style="height: 180px;">       
+                  <img src="<%= books[j].coverImage %>" alt="Book Cover" class="img-fluid" style="max-width: 100%; max-height: 100%; transition: transform 0.3s ease-in-out;" onclick="navigateToBookDetail('<%= books[j]._id %>')">   
+                </div>           
+              </div>  
+              
+              <!-- favorite button-->
+              <% if (user && user.favorites.includes(books[j]._id)) { %>
+                <button type="submit" class="btn btn-secondary align-self-center" disabled>One of favorites</button>
+              <% } else { %>
+                <form id="favoriteForm" action="/books/favorites/<%= books[j]._id %>" method="POST">
+                  <input type="hidden" name="_csrf" value="<%= _csrf %>">
+                  <button type="submit" class="btn btn-success align-self-center favorite-button" data-book-id="<%= books[j]._id %>">Mark as favorite</button>
+                </form> 
+              <% } %>             
             </div>
-            <span >
-              <%= book.title %>
-              <form action="/books/favorites/<%= book._id %>" method="POST">
-                <input type="hidden" name="_csrf" value="<%= _csrf %>">
-                <button type="submit">Favorites</button>
-              </form>
-            </span>
-          </div>  
-        <% }) %>
-        <!-- Pagination Controls -->
-        <div class="pagination">
-        <% if (currentPage > 1) { %>
-            <a href="?page=<%= currentPage - 1 %>">Previous</a>
-        <% } %>
-
-        Page <%= currentPage %> of <%= totalPages %>
-
-        <% if (currentPage < totalPages) { %>
-            <a href="?page=<%= currentPage + 1 %>">Next</a>
-        <% } %>
-
+          <% } %>
         </div>
-      <% } else { %>
-        <p>No books available
-        </p>
       <% } %>
-     </div> 
+    </div>
+    <!-- Pagination Controls -->
+    <div class="col-12">
+      <% if (currentPage > 1) { %>
+        <a href="?page=<%= currentPage - 1 %>">Previous</a>
+      <% } %>
+
+      Page <%= currentPage %> of <%= totalPages %>
+
+      <% if (currentPage < totalPages) { %>
+        <a href="?page=<%= currentPage + 1 %>">Next</a>
+      <% } %>
+    </div>
+  <% } else { %>
+    <div class="col-12">
+      <p>No books available</p>
+    </div>
+  <% } %>
+</div>
+
+
      <script>
+     
       function navigateToBookDetail(bookId){
         var bookDetailURL = '/books/'+ bookId;
         window.location.href = bookDetailURL;
       }
-     </script>
+
+    </script>
+   
      
 <%- include("partials/footer.ejs") %>
