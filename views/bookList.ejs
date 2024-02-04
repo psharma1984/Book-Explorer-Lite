@@ -32,7 +32,7 @@
               </div>  
               
               <!-- favorite button-->
-              <% if (user && user.favorites.includes(books[j]._id)) { %>
+              <% if (favorites && favorites.includes(books[j]._id)) { %>
                 <button type="submit" class="btn btn-secondary align-self-center" disabled>One of favorites</button>
               <% } else { %>
                 <form id="favoriteForm" action="/books/favorites/<%= books[j]._id %>" method="POST">

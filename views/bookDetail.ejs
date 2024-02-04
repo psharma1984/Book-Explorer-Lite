@@ -1,6 +1,6 @@
 <%- include("partials/head.ejs") %>
 <%- include("partials/header.ejs") %>
-  <p><%= user.name.toUpperCase() %>'s favorites: <%= user.favorites.length %></p>
+  <p><%= user.name.toUpperCase() %>'s favorites: <%= favorites.length %></p>
 <div class="container">
  <div class="row">
 
@@ -10,7 +10,7 @@
       <br/>
 
       <!-- Favorite Section -->
-      <% if (user && user.favorites.includes(book._id)) { %>
+      <% if (favorites && favorites.includes(book._id)) { %>
         <button type="submit" class="btn btn-secondary align-self-center" disabled>One of favorites</button>
       <% } else { %>
         <form id="favoriteForm" action="/books/favorites/<%= book._id %>" method="POST">

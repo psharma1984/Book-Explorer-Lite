@@ -1,5 +1,5 @@
 const Book = require('../models/Book')
-const User = require('../models/User')
+const Favorite = require('../models/Favorite')
 const Review = require('../models/Review')
 const parseVErr = require("../utils/parseValidationErr");
 const generateAPI = require('../utils/externalAPI');
@@ -20,6 +20,8 @@ const bookList = async (req, res) => {
 
         const response = await generateAPI(apiKey, startIndex, maxResults)
         const totalItems = response.data.totalItems;
+        const totalPages = Math.ceil(totalItems / maxResults)
+
 
         const externalBooks = response.data.items.map((item) => {
             return {
@@ -32,15 +34,19 @@ const bookList = async (req, res) => {
             };
         });
 
-        //await Book.deleteMany({});
         await Book.create(externalBooks);
 
         // Fetch only the currently inserted books from the database
         const books = await Book.find().skip(startIndex).limit(maxResults);
 
-        const totalPages = Math.ceil(totalItems / maxResults)
+        // Fetch user's favorites
+        let favorites = [];
+        const favoritesRecord = await Favorite.findOne({ user: req.user._id })
+        if (favoritesRecord) {
+            favorites = favoritesRecord.favorites;
+        }
 
-        res.render('bookList', { books, currentPage: page, totalPages });
+        res.render('bookList', { books, currentPage: page, totalPages, favorites });
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
@@ -50,12 +56,20 @@ const bookList = async (req, res) => {
 const bookDetail = async (req, res) => {
     try {
         const bookId = req.params.id;
+        const user = req.user
         const book = await Book.findById(bookId);
         if (!book) {
             return res.status(404).send('Book not found');
         }
         const reviews = await Review.find({ bookId: bookId }).populate('user');
-        res.render('bookDetail', { book, reviews });
+
+        // Fetch user's favorites
+        let favorites = [];
+        const favoritesRecord = await Favorite.findOne({ user: user._id });
+        if (favoritesRecord) {
+            favorites = favoritesRecord.favorites;
+        }
+        res.render('bookDetail', { book, reviews, favorites });
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
@@ -64,12 +78,20 @@ const bookDetail = async (req, res) => {
 
 const addTofavorites = async (req, res) => {
     try {
-        const user = req.user
         const bookId = req.params.id;
+        const user = req.user
+        // Try to find an existing favorite document for the user
+        let favorites = await Favorite.findOne({ user: user._id })
 
-        if (!user.favorites.includes(bookId)) {
-            user.favorites.push(bookId)
-            await user.save()
+        // If no favorite document found, create a new one
+        if (!favorites) {
+            favorites = await Favorite.create({ user: user._id })
+        }
+
+        // Check if the bookId is already in the favorites
+        if (!favorites.favorites.includes(bookId)) {
+            favorites.favorites.push(bookId);
+            await favorites.save();
         }
         // Store the referring URL in the session
         req.session.referringUrl = req.headers.referer || '/books';
@@ -86,11 +108,13 @@ const deleteFavorite = async (req, res) => {
         const user = req.user
         const bookId = req.params.id;
 
-        const indexToRemove = user.favorites.indexOf(bookId);
+        let favoritesRecord = await Favorite.findOne({ user: user._id })
+
+        const indexToRemove = favoritesRecord.favorites.indexOf(bookId);
         if (indexToRemove !== -1) {
             // Remove the element at the specified index
-            user.favorites.splice(indexToRemove, 1);
-            await user.save();
+            favoritesRecord.favorites.splice(indexToRemove, 1);
+            await favoritesRecord.save();
         }
         // Store the referring URL in the session
         req.session.referringUrl = req.headers.referer || '/books';
@@ -116,8 +140,13 @@ const searchBook = async (req, res) => {
 const favoriteList = async (req, res) => {
     try {
         const user = req.user
-        const favoriteBooks = user.favorites
-        const results = await Book.find({ _id: { $in: favoriteBooks } })
+        const favoriteUserId = await Favorite.findOne({ user: user._id })
+        let favoriteBooks = [];
+        let results = []
+        if (favoriteUserId && favoriteUserId.favorites.length > 0) {
+            favoriteBooks = favoriteUserId.favorites;
+            results = await Book.find({ _id: { $in: favoriteBooks } })
+        }
         res.render('favoriteList', { results })
     } catch (error) {
         console.log(error)
