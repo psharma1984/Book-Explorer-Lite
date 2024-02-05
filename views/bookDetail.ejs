@@ -26,7 +26,14 @@
           <% if (reviews && reviews.length) { %>
             <% reviews.forEach((review) => { %>
               <% review.comment.forEach((comment) => { %>
-                <p> <%= comment %>...says <strong ><%= review.user.name %></strong></p>
+                <pre> <%= comment %>...says <strong ><%= review.user.name %></strong></pre>
+                <!-- Form for deleting the review -->
+                <% if (user && review.user._id.equals(user._id)) { %>
+                  <form action="/books/review/<%= review._id %>/delete" method="POST">
+                    <input type="hidden" name="_csrf" value="<%= _csrf %>">
+                    <button type="submit">Delete</button>
+                  </form>
+                <% } %>
                 <hr />
               <% }); %>
             <% }); %>
