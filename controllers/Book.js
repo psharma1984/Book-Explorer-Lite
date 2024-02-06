@@ -133,7 +133,11 @@ const deleteFavorite = async (req, res) => {
 const searchBook = async (req, res) => {
     try {
         const query = req.body.search;
-        const searchResults = await Book.find({ title: { $regex: new RegExp(query, 'i') } });
+        // spliting the query into individual words
+        const words = query.split(/\s+/);
+        // regular expression to match any word in the title
+        const regex = new RegExp(words.map(word => `(?=.*\\b${word}\\b)`).join('|'), 'i');
+        const searchResults = await Book.find({ title: regex });
         res.render('searchResults', { results: searchResults, query });
     } catch (error) {
         console.error(error);

@@ -88,7 +88,7 @@ const deleteReview = async (req, res) => {
             { $set: { rating: newRating } }
         );
         req.flash('success', 'Review deleted successfully');
-        res.render('bookDetail', { book, info: req.flash('success'), reviews, favorites })
+        res.render('bookDetail', { book, success: req.flash('success'), reviews, favorites })
 
     } catch (error) {
         console.error('Error updating review:', error);
