@@ -1,5 +1,6 @@
 const Review = require('../models/Review');
 const Book = require('../models/Book');
+const Favorite = require('../models/Favorite')
 
 const createReview = async (req, res) => {
     try {
@@ -18,7 +19,7 @@ const createReview = async (req, res) => {
 
         if (existingReview) {
             // If a review exists, add the new comment to the existing comments array
-            existingReview.comment = existingReview.comment + '\n Updated Review:' + comment;
+            existingReview.comment = existingReview.comment + '\n' + new Date().toLocaleString() + ':' + comment;
             await existingReview.save();
         } else {
             const newReview = new Review({
@@ -55,6 +56,7 @@ const deleteReview = async (req, res) => {
     try {
         const reviewId = req.params.id
         const existingReview = await Review.findById(reviewId)
+        const user = req.user
 
         if (!existingReview) {
             throw new Error('Review not found');
@@ -63,9 +65,15 @@ const deleteReview = async (req, res) => {
         if (existingReview.user.toString() !== req.user._id.toString()) {
             throw new Error('Unauthorized: You are not the owner of this review');
         }
+        await Review.findByIdAndDelete(reviewId);
 
         const bookId = existingReview.bookId;
-        await Review.findByIdAndDelete(reviewId);
+        const book = await Book.findById(bookId);
+        let favorites = [];
+        const favoritesRecord = await Favorite.findOne({ user: user._id });
+        if (favoritesRecord) {
+            favorites = favoritesRecord.favorites;
+        }
 
         // After deletion, recalculate and update the rating
         const reviews = await Review.find({ bookId: bookId });
@@ -80,7 +88,7 @@ const deleteReview = async (req, res) => {
             { $set: { rating: newRating } }
         );
         req.flash('success', 'Review deleted successfully');
-        res.redirect('back');
+        res.render('bookDetail', { book, info: req.flash('success'), reviews, favorites })
 
     } catch (error) {
         console.error('Error updating review:', error);
@@ -88,4 +96,70 @@ const deleteReview = async (req, res) => {
         res.redirect('back'); // Redirect back to the referring URL
     }
 }
-module.exports = { createReview, deleteReview };
+
+
+const editReview = async (req, res) => {
+    try {
+        const reviewId = req.params.id
+        const existingReview = await Review.findById(reviewId)
+        const user = req.user
+
+        if (!existingReview) {
+            throw new Error('Review not found');
+        }
+        // Check if the user making the request is the owner of the review
+        if (existingReview.user.toString() !== req.user._id.toString()) {
+            throw new Error('Unauthorized: You are not the owner of this review');
+        }
+        //fetching all models data needed to populate bookDetail
+        const bookId = existingReview.bookId;
+        const book = await Book.findById(bookId)
+        const reviews = await Review.find({ bookId: bookId }).populate('user');
+        let favorites = [];
+        const favoritesRecord = await Favorite.findOne({ user: user._id });
+        if (favoritesRecord) {
+            favorites = favoritesRecord.favorites;
+        }
+        req.flash('info', 'Update review below...')
+        res.render('bookDetail', { isEditing: true, book, info: req.flash('info'), reviews, existingReview, favorites })
+
+    } catch (error) {
+        console.error('Error updating review:', error);
+        req.flash('error', 'Error deleting review');
+        res.redirect('back'); // Redirect back to the referring URL
+    }
+}
+
+
+const updateReview = async (req, res) => {
+    try {
+        const reviewId = req.params.id
+        const newComment = req.body.comment
+        const existingReview = await Review.findById(reviewId)
+        const user = req.user
+
+        // Check if the user making the request is the owner of the review
+        if (existingReview.user.toString() !== req.user._id.toString()) {
+            throw new Error('Unauthorized: You are not the owner of this review');
+        }
+        existingReview.comment = newComment
+        await existingReview.save()
+        //fetching all models data needed to populate bookDetail
+        const bookId = existingReview.bookId;
+        const book = await Book.findById(bookId)
+        const reviews = await Review.find({ bookId: bookId }).populate('user');
+        let favorites = [];
+        const favoritesRecord = await Favorite.findOne({ user: user._id });
+        if (favoritesRecord) {
+            favorites = favoritesRecord.favorites;
+        }
+        req.flash('success', 'Review Updated successfully!')
+        res.render('bookDetail', { book, success: req.flash('success'), reviews, favorites })
+
+    } catch (error) {
+        console.error('Error updating review:', error);
+        req.flash('error', 'Error deleting review');
+        res.redirect('back'); // Redirect back to the referring URL
+    }
+}
+module.exports = { createReview, deleteReview, editReview, updateReview };

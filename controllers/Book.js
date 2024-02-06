@@ -58,6 +58,7 @@ const bookDetail = async (req, res) => {
         const bookId = req.params.id;
         const user = req.user
         const book = await Book.findById(bookId);
+        console.log(book)
         if (!book) {
             return res.status(404).send('Book not found');
         }
@@ -92,14 +93,16 @@ const addTofavorites = async (req, res) => {
         if (!favorites.favorites.includes(bookId)) {
             favorites.favorites.push(bookId);
             await favorites.save();
+            req.flash('success', 'Book added to Favorites');
         }
         // Store the referring URL in the session
-        req.session.referringUrl = req.headers.referer || '/books';
-        res.redirect(req.session.referringUrl) // Redirect back to the referring url
+        //req.session.referringUrl = req.headers.referer || '/books';
+        res.redirect('back') // Redirect back to the referring url
 
     } catch (error) {
         console.error(error);
-        res.status(500).send('Internal Server Error');
+        req.flash('error', 'Error adding to favorites:Server Error');
+        res.redirect('back');
     }
 }
 
@@ -117,8 +120,9 @@ const deleteFavorite = async (req, res) => {
             await favoritesRecord.save();
         }
         // Store the referring URL in the session
-        req.session.referringUrl = req.headers.referer || '/books';
-        res.redirect(req.session.referringUrl) // Redirect back to the referring url
+        req.flash('success', 'Book deleted from Favorites');
+        //req.session.referringUrl = req.headers.referer || '/books';
+        res.redirect('back') // Redirect back to the referring url
 
     } catch (error) {
         console.error(error);
