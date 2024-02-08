@@ -1,6 +1,15 @@
 <%- include("partials/head.ejs") %>
 <%- include("partials/header.ejs") %>
-  <p><%= user.name.toUpperCase() %>'s favorites: <%= favorites.length %></p>
+<nav class="navbar navbar-expand-lg bg-body-tertiary"> 
+  <div class="container-fluid d-flex justify-content-end">
+      <div class="d-flex">
+        <a class="navbar-brand fs-5 text-success text-decoration-underline" href="/books">BooksList</a>   
+        <a class="navbar-brand fs-5 text-success text-decoration-underline" href="/books/favoriteList" > Favorites(<%= favorites.length %>)</a>
+      </div>
+      </div>
+  </nav>
+  <br/>
+  <br/>
 <div class="container">
  <div class="row">
 
@@ -50,7 +59,7 @@
             <p>No reviews yet.</p>
           <% } %>
         </div>
-      </div>         
+      </div>   
   </div>
 
   <!-- Ratings Stars -->

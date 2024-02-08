@@ -1,0 +1,63 @@
+<%- include("partials/head.ejs") %>
+<%- include("partials/header.ejs") %>
+<nav class="navbar navbar-expand-lg bg-body-tertiary"> 
+  <div class="container-fluid d-flex ">
+    <a href="/">Home</a>
+  </div>
+  <div class="container-fluid d-flex justify-content-end">
+      <div class="d-flex">
+        <a class="navbar-brand fs-5 text-success text-decoration-underline" href="/sessions/logon">Sign In</a>   
+        <a class="navbar-brand fs-5 text-success text-decoration-underline" href="/sessions/register"> Register</a>
+      </div>
+      </div>
+  </nav>
+  <br/>
+<div class="container">
+ <div class="row">
+
+  <div class="col-sm-4 text-center">    
+      <img src="<%= book.coverImage %>" alt="Book Cover" class="img-fluid border-end border-black border-5 ">        
+  </div>
+
+  <!-- Ratings Stars -->
+  <div class="col-sm-8 text-start bg-light p-2 text-dark bg-opacity-50">
+    <h1 class="h1 fw-bold"> <%= book.title %></h1>
+    <h4><%= book.author%></h4>
+    <div class="rating fw-large">
+      <% const roundedRating = Math.ceil(book.rating); %>
+      <% for (let i = 1; i <= 5; i++) { %>
+        <i class="fa-sharp fa-star text-danger <%= i <= roundedRating ? 'fa-solid' : 'fa-regular' %>"></i>
+      <% } %><span class="fw-bold fs-2"><%= book.rating%></span>
+    </div>
+
+    <br/>
+    <p class="fw-medium"><%= book.synopsis %></p>    
+    <br />
+      <!-- Review form-->
+    <% if (user) { %>
+      <% if (typeof existingReview !== 'undefined' && existingReview !== null) { %>
+      <!-- Editing existing review -->
+        <form action="/books/review/<%= existingReview._id %>/update" method="POST">
+          <input type="hidden" name="_csrf" value="<%= _csrf %>">
+          <div class="mb-3">
+            <textarea class="form-control" id="comment" name="comment" rows="3" required><%= existingReview.comment %></textarea>
+          </div>
+          <button type="submit" class="btn btn-success">Edit Review</button>
+        </form>
+      <% } else { %>    
+      <!-- Adding new review -->
+      <form action="/books/review/<%= book._id %>" method="POST">
+        <input type="hidden" name="_csrf" value="<%= _csrf %>">
+        <div class="mb-3">
+          <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-success"> Write a Review</button>
+      </form>
+      <% } %>
+    <% } %>
+  </div>
+
+ </div> 
+</div>  
+
+<%- include("partials/footer.ejs") %>

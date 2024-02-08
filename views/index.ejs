@@ -1,8 +1,7 @@
 <%- include("partials/head.ejs") %>
 <%- include("partials/header.ejs") %>
 <% if (user) { %>
-        welcome <%= user.name %>
-        <a href="/books">View Books</a>
+  <a href="/books">View Books</a>
 <% } else { %>
 <div class="container">
   <nav class="navbar " style="background-color: #e3f2fd;">
@@ -34,10 +33,8 @@
     <div class="col-sm-6">      
       <!-- Content for the second column -->
        <div class="row">
-               <p>hello</p>
 </div>
        <div class="row">
-              <p>hello</p>
 
        </div>
 
@@ -46,9 +43,9 @@
 </div>
 <% } %>
 <script>
-      function navigateToBookDetail(bookId){
-        var bookDetailURL = '/books/'+ bookId;
-        window.location.href = bookDetailURL;
-      }
+  function navigateToBookDetail(bookId){
+    var bookDetailURL = '/featuredbooks/'+ bookId;
+    window.location.href = bookDetailURL;
+}
 </script>
 <%- include("partials/footer.ejs") %>
