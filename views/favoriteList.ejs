@@ -1,6 +1,6 @@
 <%- include("partials/head.ejs") %>
 <%- include("partials/header.ejs") %>
-<h2><%= user.name %> Favorites</h2>
+<h4><%= user.name.toUpperCase() %> Favorites</h4>
 <div class="container">
    <% if (results.length > 0) { %>
         <% for (let i = 0; i < results.length; i += 6) { %>

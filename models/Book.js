@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const BookSchema = new mongoose.Schema({
+    id: {
+        type: String,
+        required: true,
+        unique: true
+    },
 
     title: { type: String, required: [true, 'Please provide a book title'] },
 

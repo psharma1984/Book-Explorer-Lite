@@ -1,12 +1,12 @@
 const express = require('express')
 const path = require('path');
+require('dotenv').config();
 const { featuredBooks } = require('./controllers/Book')
 
 require("express-async-errors");
 
 const app = express()
 
-require('dotenv').config();
 
 //body-parser
 app.use(express.json());
@@ -36,6 +36,7 @@ const sessionParams = {
     store: store,
     cookie: { secure: false, sameSite: "strict" },
 };
+require('./backgroundTasks/backgroundTask');
 
 if (app.get('env') === 'production') {
     app.set('trust proxy', 1); // trust first proxy
