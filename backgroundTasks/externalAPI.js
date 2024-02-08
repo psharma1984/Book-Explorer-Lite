@@ -1,10 +1,16 @@
 const axios = require('axios');
-const randomSearchTerm = getRandomWord();
 
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array
+}
 
 function getRandomWord() {
     // function to generate a random word 
-    const words = [
+    let words = [
         'science', 'fiction', 'history', 'technology', 'art', 'love', 'horror',
         'fantasy', 'adventure', 'mystery', 'romance', 'thriller', 'biography',
         'self-help', 'travel', 'cooking', 'business', 'finance', 'psychology',
@@ -20,14 +26,14 @@ function getRandomWord() {
         'communication', 'negotiation', 'time management', 'productivity', 'strategy',
         'critical thinking', 'problem solving', 'decision making', 'emotional intelligence'
     ];
-    const randomIndex = Math.floor(Math.random() * words.length);
-    return words[randomIndex];
+    return shuffleArray(words)[0];
 }
 
-const generateAPI = async (apiKey) => {
+const generateAPI = async (startIndex = 0, maxResults = 10, apiKey) => {
     try {
+        const randomSearchTerm = getRandomWord();
         console.log(randomSearchTerm);
-        const apiUrl = `https://www.googleapis.com/books/v1/volumes?q=${randomSearchTerm}&key=${apiKey}`;
+        const apiUrl = `https://www.googleapis.com/books/v1/volumes?q=${randomSearchTerm}&startIndex=${startIndex}&maxResults=${maxResults}&key=${apiKey}`;
         const response = await axios.get(apiUrl);
         return response;
     } catch (error) {

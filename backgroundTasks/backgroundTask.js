@@ -1,6 +1,7 @@
 const Book = require('../models/Book')
 const generateAPI = require('./externalAPI');
 
+let startIndex = 0; // Initial startIndex value
 
 async function fetchDataAndStore() {
     try {
@@ -8,7 +9,10 @@ async function fetchDataAndStore() {
         if (!apiKey) {
             throw new Error('API key is missing');
         }
-        const response = await generateAPI(apiKey)
+
+        const maxResults = 40;
+        const response = await generateAPI(startIndex, maxResults, apiKey);
+        startIndex += 40;
         const externalBooks = response.data.items.map((item) => {
             return {
                 id: item.id,
