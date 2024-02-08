@@ -99,7 +99,8 @@ app.get('/featuredbooks/:id', async (req, res) => {
     }
     res.render('featuredBooks', { book });
   } catch (error) {
-    res.status(500).send('Internal Server Error');
+    req.flash('error', 'Internal Server Error');
+    res.redirect('back');
   }
 });
 
@@ -107,15 +108,6 @@ app.use('/sessions', require('./routes/sessionRoutes'));
 const bookRouter = require('./routes/Book');
 // bookRouter
 app.use('/books', auth, bookRouter);
-
-// routes
-// app.get('/', (req, res) => {
-//     // Access sessionId
-//     const sessionId = req.sessionID;
-//     console.log('Session ID:', sessionId);
-
-//     res.send('Hello, Book Explorer!');
-// });
 
 // error handling middleware
 app.use((req, res) => {
@@ -134,8 +126,7 @@ const start = async () => {
     // eslint-disable-next-line global-require
     await require('./db/connect')(process.env.MONGO_URI);
     // eslint-disable-next-line no-console
-    app.listen(port, () => console.log(`Server is listening on port ${port}...`),
-    );
+    app.listen(port, () => console.log(`Server is listening on port ${port}...`));
   } catch (error) {
     console.log(error);
   }

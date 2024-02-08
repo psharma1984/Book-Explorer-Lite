@@ -1,6 +1,7 @@
 const Review = require('../models/Review');
 const Book = require('../models/Book');
-const Favorite = require('../models/Favorite')
+const Favorite = require('../models/Favorite');
+const parseValidationErrors = require('../utils/parseValidationErr');
 
 const createReview = async (req, res) => {
   try {
@@ -8,14 +9,6 @@ const createReview = async (req, res) => {
     // eslint-disable-next-line no-underscore-dangle
     const userId = req.user._id; // Retrieve user ID from the form
     const { comment } = req.body;
-    // const user = await User.findById(userId);
-    // const book = await Book.findById(bookId);
-
-
-    // if (!user || !book) {
-    //     throw new Error('User or book not found');
-    // }
-    // Check if a review already exists for the user and book
     const existingReview = await Review.findOne({ user: userId, bookId });
 
     if (existingReview) {
@@ -48,7 +41,11 @@ const createReview = async (req, res) => {
     res.redirect(`/books/${bookId}?success=Review submitted successfully`);
   } catch (error) {
     console.error('Error creating review:', error);
-    req.flash('error', 'Error creating/updating review');
+    if (error.name === 'ValidationError') {
+      parseValidationErrors(error, req);
+    } else {
+      req.flash('error', 'Error creating/updating review');
+    }
     res.redirect('back');
   }
 };
@@ -96,7 +93,12 @@ const deleteReview = async (req, res) => {
     });
   } catch (error) {
     console.error('Error updating review:', error);
-    req.flash('error', 'Error deleting review');
+    // Handle validation errors if they occur
+    if (error.name === 'ValidationError') {
+      parseValidationErrors(error, req);
+    } else {
+      req.flash('error', 'Error deleting review');
+    }
     res.redirect('back'); // Redirect back to the referring URL
   }
 };
@@ -131,7 +133,12 @@ const editReview = async (req, res) => {
     });
   } catch (error) {
     console.error('Error updating review:', error);
-    req.flash('error', 'Error deleting review');
+    // Handle validation errors if they occur
+    if (error.name === 'ValidationError') {
+      parseValidationErrors(error, req);
+    } else {
+      req.flash('error', 'Error editing review');
+    }
     res.redirect('back'); // Redirect back to the referring URL
   }
 };
@@ -166,7 +173,12 @@ const updateReview = async (req, res) => {
     });
   } catch (error) {
     console.error('Error updating review:', error);
-    req.flash('error', 'Error deleting review');
+    // Handle validation errors if they occur
+    if (error.name === 'ValidationError') {
+      parseValidationErrors(error, req);
+    } else {
+      req.flash('error', 'Error updating review');
+    }
     res.redirect('back'); // Redirect back to the referring URL
   }
 };
