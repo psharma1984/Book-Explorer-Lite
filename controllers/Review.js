@@ -68,7 +68,7 @@ const deleteReview = async (req, res) => {
         await Review.findByIdAndDelete(reviewId);
 
         const bookId = existingReview.bookId;
-        const book = await Book.findById(bookId);
+        let book = await Book.findById(bookId);
         let favorites = [];
         const favoritesRecord = await Favorite.findOne({ user: user._id });
         if (favoritesRecord) {
@@ -83,7 +83,7 @@ const deleteReview = async (req, res) => {
         const newRating = Math.min((totalComments / maxValueRating) * 5, 5);
 
         // Update the rating field in the Book model
-        await Book.findOneAndUpdate(
+        book = await Book.findOneAndUpdate(
             { _id: bookId },
             { $set: { rating: newRating } }
         );

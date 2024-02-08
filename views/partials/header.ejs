@@ -1,10 +1,12 @@
 <h1 style="text-align: center; color:white">Book Explorer Lite</h1>
 <% if (user) { %>
-   <p>User <%= user.name %> is logged on.</p>
+<div class="d-flex justify-content-between align-items-center">
+   <p class="fw-bold fst-italic">Welcome <%= user.name.toUpperCase() %> !!!</p>
    <form method="POST" action="/sessions/logoff">
          <input type="hidden" name="_csrf" value="<%= _csrf %>">
-   <button class="btn btn-secondary">Logoff</button>
+   <button class="btn btn-outline-primary">Logout</button>
    </form>
+   </div>
 <% } %>
 <% if (errors) {
     errors.forEach((err)=>{ %>

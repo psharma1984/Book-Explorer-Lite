@@ -2,42 +2,14 @@ const Book = require('../models/Book')
 const Favorite = require('../models/Favorite')
 const Review = require('../models/Review')
 const parseVErr = require("../utils/parseValidationErr");
-const generateAPI = require('../utils/externalAPI');
 
 const bookList = async (req, res) => {
     try {
 
-        const apiKey = process.env.API_KEY;
-        if (!apiKey) {
-            throw new Error('API key is missing');
-        }
         //pagination feature
         const page = parseInt(req.query.page) || 1
         const maxResults = 24     //number of books to be displayed on a page
-
-        // Perform pagination to get a subset of books for the requested page
         const startIndex = (page - 1) * maxResults;
-
-        const response = await generateAPI(apiKey, startIndex, maxResults)
-        const totalItems = response.data.totalItems;
-        const totalPages = Math.ceil(totalItems / maxResults)
-
-
-        const externalBooks = response.data.items.map((item) => {
-            return {
-                title: item.volumeInfo.title,
-                author: item.volumeInfo.authors ? item.volumeInfo.authors.join(', ') : 'Unknown Author',
-                genres: item.volumeInfo.categories || [],
-                synopsis: item.volumeInfo.description || 'No synopsis available',
-                publicationDate: item.volumeInfo.publishedDate ? new Date(item.volumeInfo.publishedDate) : null,
-                coverImage: item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : null,
-            };
-        });
-
-        await Book.create(externalBooks);
-
-        // Fetch only the currently inserted books from the database
-        const books = await Book.find().skip(startIndex).limit(maxResults);
 
         // Fetch user's favorites
         let favorites = [];
@@ -45,6 +17,10 @@ const bookList = async (req, res) => {
         if (favoritesRecord) {
             favorites = favoritesRecord.favorites;
         }
+        const books = await Book.find().skip(startIndex).limit(maxResults);
+        const totalItems = await Book.countDocuments();
+
+        const totalPages = Math.ceil(totalItems / maxResults);
 
         res.render('bookList', { books, currentPage: page, totalPages, favorites });
     } catch (error) {
@@ -58,7 +34,7 @@ const bookDetail = async (req, res) => {
         const bookId = req.params.id;
         const user = req.user
         const book = await Book.findById(bookId);
-        console.log(book)
+        //console.log(book)
         if (!book) {
             return res.status(404).send('Book not found');
         }
@@ -132,13 +108,28 @@ const deleteFavorite = async (req, res) => {
 
 const searchBook = async (req, res) => {
     try {
-        const query = req.body.search;
+        const page = parseInt(req.query.page) || 1; // Default to page 1 if not specified
+        console.log(page)
+        let query = req.body.search || req.query.search;
+        if (page > 1) {
+            query = req.query.search
+        }
         // spliting the query into individual words
         const words = query.split(/\s+/);
         // regular expression to match any word in the title
         const regex = new RegExp(words.map(word => `(?=.*\\b${word}\\b)`).join('|'), 'i');
-        const searchResults = await Book.find({ title: regex });
-        res.render('searchResults', { results: searchResults, query });
+
+        const limit = 24; // Number of results per page
+        const totalItems = await Book.countDocuments({ title: regex });
+        const skip = (page - 1) * limit;
+        const searchResults = await Book.find({ title: regex }).skip(skip).limit(limit);
+        // total number of pages
+        const totalPages = Math.ceil(totalItems / limit);
+
+        res.render('searchResults', {
+            results: searchResults, query, currentPage: page,
+            totalPages
+        });
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');

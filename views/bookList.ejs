@@ -1,21 +1,22 @@
 <%- include("partials/head.ejs") %>
 <%- include("partials/header.ejs") %>
 <!-- Search Form -->
-<form action="/books/search" method="POST">
-    <div class="row g-3 align-items-center">
-    <input type="hidden" name="_csrf" value="<%= _csrf %>">
-      <div class="col-auto">
-        <input type="text" class="form-control" name="search" placeholder="Search...">
+  <nav class="navbar navbar-expand-lg bg-body-tertiary"> 
+  <div class="container-fluid d-flex justify-content-end">
+      <div class="d-flex">
+    <a class="navbar-brand fs-5 text-success text-decoration-underline" href="/books/favoriteList" > Favorites</a>
+      <form class="d-flex" action="/books/search" method="POST">
+        <input type="hidden" name="_csrf" value="<%= _csrf %>">
+        <input type="text" class="form-control me-2" name="search" placeholder="Search titles">  
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
       </div>
-      <div class="col-auto">
-        <button type="submit" class="btn btn-secondary">Search</button>    </div>
       </div>
-    </div>
-  </form>
+  </nav>
 
 <!-- Favorite List-->
 <div>
-  <p><a href="/books/favoriteList" > Favorites</a></p>
+  <p></p>
 </div>
 
 <div class="container">
@@ -46,15 +47,15 @@
       <% } %>
     </div>
     <!-- Pagination Controls -->
-    <div class="col-12">
+    <div class="col-12 d-flex justify-content-center bg-light p-2 bg-opacity-25">
       <% if (currentPage > 1) { %>
-        <a href="?page=<%= currentPage - 1 %>">Previous</a>
+        <a style="font-weight:bold;color:green;margin-right: 15px;" href="?page=<%= currentPage - 1 %>">Previous</a>
       <% } %>
 
-      Page <%= currentPage %> of <%= totalPages %>
+      <p class="text-dark ">Page <%= currentPage %> of <%= totalPages %></p>
 
       <% if (currentPage < totalPages) { %>
-        <a href="?page=<%= currentPage + 1 %>">Next</a>
+        <a style="font-weight:bold;color:green;margin-left: 15px;" href="?page=<%= currentPage + 1 %>">Next</a>
       <% } %>
     </div>
   <% } else { %>
