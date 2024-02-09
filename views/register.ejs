@@ -7,19 +7,19 @@
         <input type="hidden" name="_csrf" value="<%= _csrf %>">
       <div class="mb-3">
         <label class="form-label" name="name">Enter your name:</label>
-        <input class="form-control" name="name" />
+        <input class="form-control" id="name" name="name" required/>
       </div>
       <div class="mb-3">
         <label class="form-label" name="email">Enter your email:</label>
-        <input class="form-control"name="email" />
+        <input class="form-control"name="email" id="email" required/>
       </div>
       <div class="mb-3">
         <label class="form-label" name="password">Enter your password:</label>
-        <input class="form-control" type="password" name="password" />
+        <input class="form-control" type="password" name="password" id="password" required/>
       </div>
       <div class="mb-3">
         <label class="form-label" name="password1">Confirm your password:</label>
-        <input class="form-control" type="password" name="password1" />
+        <input class="form-control" type="password" name="password1" id="password1" required/>
       </div>
       <div>
         <button class="btn btn-primary">Register</button>
@@ -34,4 +34,24 @@
   </div>
 </div>
 </div>
+<script>
+  function validateForm() {
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const password1 = document.getElementById('password1').value;
+
+    if (!name || !email || !password || !password1) {
+      alert('All fields are required.');
+      return false;
+    }
+
+    if (password !== password1) {
+      alert('Passwords do not match.');
+      return false;
+    }
+
+    return true;
+  }
+</script>
 <%- include("partials/footer.ejs") %>

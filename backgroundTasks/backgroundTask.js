@@ -24,7 +24,7 @@ async function fetchDataAndStore() {
       coverImage: item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : null,
     }));
     // Check for existing documents with the same IDs
-    const existingBooks = await Book.find({ id: { $in: externalBooks.map(book => book.id) } });
+    const existingBooks = await Book.find({ id: { $in: externalBooks.map((book) => book.id) } });
 
     // Filter out books that already exist in the database
     const newBooks = [];
@@ -55,7 +55,7 @@ async function fetchDataAndStore() {
   }
 }
 
-const fetchInterval = 60000; //
+const fetchInterval = 3600000; // 1 hour
 
 setInterval(fetchDataAndStore, fetchInterval);
 

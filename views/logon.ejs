@@ -4,11 +4,11 @@
   <input type="hidden" name="_csrf" value="<%= _csrf %>">
   <div class="mb-3">
     <label class="form-label" name="email">Email address:</label>
-    <input class="form-control" name="email" placeholder="abc@example.com"/>
+    <input class="form-control" id="email" name="email" placeholder="abc@example.com" required/>
   </div>
   <div class="mb-3">
     <label class="form-label" name="password">Enter your password:</label>
-    <input class="form-control" type="password" name="password" />
+    <input class="form-control" type="password" id="password" name="password" required/>
   </div>
   <div>
       <button class="btn btn-primary">Logon</button>
@@ -17,4 +17,29 @@
       </a>
   </div>
 </form>
+
+<script>
+  function validateForm() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    // Regular expression to validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // Regular expression to validate password format
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$&*]).{8,}$/;
+
+    if (!emailRegex.test(email)) {
+      alert('Please enter a valid email address.');
+      return false;
+    }
+
+    if (!passwordRegex.test(password)) {
+      alert('Password must have at least 8 characters with at least one lower case letter, one upper case letter, one number, and one of the characters !@#$&*');
+      return false;
+    }
+
+    return true;
+  }
+</script>
 <%- include("partials/footer.ejs") %>

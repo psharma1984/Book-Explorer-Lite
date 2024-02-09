@@ -80,16 +80,16 @@
     <% if (user) { %>
       <% if (typeof existingReview !== 'undefined' && existingReview !== null) { %>
       <!-- Editing existing review -->
-        <form action="/books/review/<%= existingReview._id %>/update" method="POST">
+        <form id="editReviewForm" action="/books/review/<%= existingReview._id %>/update" method="POST" onsubmit="return validateReview('editReviewForm')>
           <input type="hidden" name="_csrf" value="<%= _csrf %>">
           <div class="mb-3">
-            <textarea class="form-control" id="comment" name="comment" rows="3" required><%= existingReview.comment %></textarea>
+            <textarea class="form-control" id="editComment" name="editComment" rows="3" required><%= existingReview.comment %></textarea>
           </div>
           <button type="submit" class="btn btn-success">Edit Review</button>
         </form>
       <% } else { %>    
       <!-- Adding new review -->
-      <form action="/books/review/<%= book._id %>" method="POST">
+      <form id="newReviewForm" action="/books/review/<%= book._id %>" method="POST" onsubmit="return validateReview('newReviewForm')>
         <input type="hidden" name="_csrf" value="<%= _csrf %>">
         <div class="mb-3">
           <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
@@ -102,5 +102,17 @@
 
  </div> 
 </div>  
+<script>
+  function validateReview(formId) {
+    var commentField = document.getElementById(formId === 'editReviewForm' ? 'editComment' : 'comment').value.trim();
+
+    // Check if comment field is empty
+    if (commentField === '') {
+      alert('Please enter your review.');
+      return false; // Prevent form submission
+    }
+    return true;
+  }
+</script>
 
 <%- include("partials/footer.ejs") %>

@@ -5,11 +5,36 @@ require('dotenv').config();
 
 require('express-async-errors');
 
+// extra security packages
+const helmet = require('helmet');
+const xss = require('xss-clean');
+
 const app = express();
 
 // body-parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: [
+        "'self'",
+        'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js',
+        'https://kit.fontawesome.com/d38377c6d2.js',
+        "'unsafe-inline'",
+      ],
+      styleSrc: [
+        "'self'",
+        'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css',
+        "'unsafe-inline'",
+      ],
+      objectSrc: ["'none'"],
+      upgradeInsecureRequests: null,
+    },
+  },
+}));
+app.use(xss());
 
 // cookie-parser
 const cookieParser = require('cookie-parser');

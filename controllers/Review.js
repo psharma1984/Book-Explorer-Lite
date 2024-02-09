@@ -146,7 +146,7 @@ const editReview = async (req, res) => {
 const updateReview = async (req, res) => {
   try {
     const reviewId = req.params.id;
-    const newComment = req.body.comment;
+    const newComment = req.body.editComment;
     const existingReview = await Review.findById(reviewId);
     const { user } = req;
 
