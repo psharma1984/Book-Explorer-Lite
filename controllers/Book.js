@@ -90,8 +90,8 @@ const addTofavorites = async (req, res) => {
       req.flash('success', 'Book added to Favorites');
     }
     // Store the referring URL in the session
-    // req.session.referringUrl = req.headers.referer || '/books';
-    res.redirect('back'); // Redirect back to the referring url
+    req.session.referringUrl = req.headers.referer || '/books';
+    res.redirect(req.session.referringUrl); // Redirect back to the referring url
   } catch (error) {
     console.error(error);
     if (error.name === 'ValidationError') {
@@ -119,8 +119,8 @@ const deleteFavorite = async (req, res) => {
     }
     // Store the referring URL in the session
     req.flash('success', 'Book deleted from Favorites');
-    // req.session.referringUrl = req.headers.referer || '/books';
-    res.redirect('back'); // Redirect back to the referring url
+    req.session.referringUrl = req.headers.referer || '/books/favoriteList';
+    res.redirect(req.session.referringUrl); // Redirect back to the referring url
   } catch (error) {
     console.error(error);
     // Handle validation errors if they occur

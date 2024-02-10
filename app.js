@@ -14,26 +14,29 @@ const app = express();
 // body-parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: [
-        "'self'",
-        'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js',
-        'https://kit.fontawesome.com/d38377c6d2.js',
-        "'unsafe-inline'",
-      ],
-      styleSrc: [
-        "'self'",
-        'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css',
-        "'unsafe-inline'",
-      ],
-      objectSrc: ["'none'"],
-      upgradeInsecureRequests: null,
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'", 'https://ka-f.fontawesome.com'],
+        imgSrc: ["'self'", 'http://books.google.com'],
+        scriptSrc: [
+          "'self'",
+          'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js', 'https://kit.fontawesome.com/d38377c6d2.js',
+          "'unsafe-inline'",
+        ],
+        objectSrc: ["'none'"],
+        styleSrc: [
+          "'self'",
+          'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css', 'https://kit.fontawesome.com/d38377c6d2.js',
+          "'unsafe-inline'",
+        ],
+        scriptSrcAttr: ["'self'", "'unsafe-inline'"],
+        upgradeInsecureRequests: null,
+      },
     },
-  },
-}));
+  }),
+);
 app.use(xss());
 
 // cookie-parser
@@ -112,6 +115,8 @@ const auth = require('./middlewares/auth');
 const { featuredBooks } = require('./controllers/Book');
 
 app.get('/', featuredBooks);
+app.use('/sessions', require('./routes/sessionRoutes'));
+
 // eslint-disable-next-line consistent-return
 app.get('/featuredbooks/:id', async (req, res) => {
   try {
@@ -129,7 +134,6 @@ app.get('/featuredbooks/:id', async (req, res) => {
   }
 });
 
-app.use('/sessions', require('./routes/sessionRoutes'));
 const bookRouter = require('./routes/Book');
 // bookRouter
 app.use('/books', auth, bookRouter);

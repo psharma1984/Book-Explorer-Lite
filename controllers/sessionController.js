@@ -37,6 +37,7 @@ const registerDo = async (req, res, next) => {
   // else pass errors to be rendered in the register view
   // eslint-disable-next-line camelcase
   if (!validation_errors) {
+    req.flash('success', 'User Registered.. Please Sign In');
     res.redirect('/');
   } else {
     return res.render('register', { errors: req.flash('error') });

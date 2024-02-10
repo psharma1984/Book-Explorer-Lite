@@ -3,8 +3,8 @@
 <div class="container">
 <div class="row">
   <div class="col-sm-6">
-    <form method="POST">
-        <input type="hidden" name="_csrf" value="<%= _csrf %>">
+    <form method="POST" onsubmit="return validateForm()">
+        <input type="hidden" name="_csrf" value="<%= _csrf %>" />
       <div class="mb-3">
         <label class="form-label" name="name">Enter your name:</label>
         <input class="form-control" id="name" name="name" required/>
@@ -34,15 +34,26 @@
   </div>
 </div>
 </div>
-<script>
+<script >
   function validateForm() {
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     const password1 = document.getElementById('password1').value;
 
-    if (!name || !email || !password || !password1) {
-      alert('All fields are required.');
+ // Regular expression to validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // Regular expression to validate password format
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$&*]).{8,}$/;
+
+   if (!emailRegex.test(email)) {
+      alert('Please enter a valid email address.');
+      return false;
+    }
+
+    if (!passwordRegex.test(password)) {
+      alert('Password must have at least 8 characters with at least one lower case letter, one upper case letter, one number, and one of the characters !@#$&*');
       return false;
     }
 
@@ -50,7 +61,7 @@
       alert('Passwords do not match.');
       return false;
     }
-
+   
     return true;
   }
 </script>
