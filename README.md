@@ -13,7 +13,7 @@ This a simple web application for exploring and discovering books. It allows use
 ## Prerequisites
 
 Before running the application, ensure you have the following dependencies installed:
-    Node.js
+    Node.js and 
     npm (Node Package Manager)
     
 ## Installation
