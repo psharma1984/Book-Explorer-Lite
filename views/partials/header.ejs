@@ -3,7 +3,7 @@
 <div class="d-flex justify-content-between align-items-center">
    <p class="fw-bold fst-italic">Welcome <%= user.name.toUpperCase() %> !!!</p>
    <form method="POST" action="/sessions/logoff">
-         <input type="hidden" name="_csrf" value="<%= _csrf %>">
+         <input type="hidden" name="_csrf" value="<%= _csrf %>"/>
    <button class="btn btn-outline-primary">Logout</button>
    </form>
    </div>

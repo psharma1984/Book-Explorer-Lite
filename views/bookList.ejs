@@ -5,9 +5,9 @@
   <div class="container-fluid d-flex justify-content-end">
       <div class="d-flex">
     <a class="navbar-brand fs-5 text-success text-decoration-underline" href="/books/favoriteList" > Favorites</a>
-      <form class="d-flex" action="/books/search" method="POST">
-        <input type="hidden" name="_csrf" value="<%= _csrf %>">
-        <input type="text" class="form-control me-2" name="search" placeholder="Search titles">  
+      <form class="d-flex" action="/books/search" method="POST" onSubmit = "return validateSearch()">
+        <input type="hidden" name="_csrf" value="<%= _csrf %>"/>
+        <input type="text" class="form-control me-2" name="search" id="searchInput" placeholder="Search titles">  
         <button class="btn btn-outline-success" type="submit">Search</button>
       </form>
       </div>
@@ -37,7 +37,7 @@
                 <button type="submit" class="btn btn-secondary align-self-center" disabled>One of favorites</button>
               <% } else { %>
                 <form id="favoriteForm" action="/books/favorites/<%= books[j]._id %>" method="POST">
-                  <input type="hidden" name="_csrf" value="<%= _csrf %>">
+                  <input type="hidden" name="_csrf" value="<%= _csrf %>"/>
                   <button type="submit" class="btn btn-success align-self-center favorite-button" data-book-id="<%= books[j]._id %>">Mark as favorite</button>
                 </form> 
               <% } %>             
@@ -66,14 +66,25 @@
 </div>
 
 
-     <script>
+<script >
      
-      function navigateToBookDetail(bookId){
-        var bookDetailURL = '/books/'+ bookId;
-        window.location.href = bookDetailURL;
-      }
+  function navigateToBookDetail(bookId){
+    var bookDetailURL = '/books/'+ bookId;
+    window.location.href = bookDetailURL;
+  }
 
-    </script>
+  function validateSearch() {
+    var searchInput = document.getElementById('searchInput').value.trim();
+
+    // Check if search input is empty
+    if (searchInput === '') {
+      alert('Please enter a search query.');
+      return false; // Prevent form submission
+    }
+    return true;
+  }
+
+</script>
    
      
 <%- include("partials/footer.ejs") %>

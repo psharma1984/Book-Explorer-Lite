@@ -1,8 +1,7 @@
 <%- include("partials/head.ejs") %>
 <%- include("partials/header.ejs") %>
 <% if (user) { %>
-        welcome <%= user.name %>
-        <a href="/books">View Books</a>
+  <a href="/books">View Books</a>
 <% } else { %>
 <div class="container">
   <nav class="navbar " style="background-color: #e3f2fd;">
@@ -21,10 +20,11 @@
           <p class="fst-italic">What will <kbd>you</kbd> discover today ??<p>
         </div>
         <% if (books && books.length) { %>
+      
           <% books.forEach((book) => { %>
               <div class="col-md-3 mb-3">
             <div class="d-flex align-items-center justify-content-cente" style="height: 180px;">
-            <img src="<%= book.coverImage %>" alt="Book Cover" class="img-fluid" style="max-width: 100%; max-height: 100%;  transition: transform 0.3s ease-in-out;" onclick="navigateToBookDetail('<%= book._id %>')">
+            <img src="<%= book.coverImage %>" alt="Book Cover" class="img-fluid" style="max-width: 100%; max-height: 100%;  transition: transform 0.3s ease-in-out;" onclick="navigateToBookDetail('<%= book._id %>')" >
             </div>
             </div>
           <% }) %>  
@@ -34,10 +34,8 @@
     <div class="col-sm-6">      
       <!-- Content for the second column -->
        <div class="row">
-               <p>hello</p>
 </div>
        <div class="row">
-              <p>hello</p>
 
        </div>
 
@@ -45,10 +43,10 @@
   </div>
 </div>
 <% } %>
-<script>
-      function navigateToBookDetail(bookId){
-        var bookDetailURL = '/books/'+ bookId;
-        window.location.href = bookDetailURL;
-      }
+<script >
+  function navigateToBookDetail(bookId){
+    var bookDetailURL = '/featuredbooks/'+ bookId;
+    window.location.href = bookDetailURL;
+}
 </script>
 <%- include("partials/footer.ejs") %>

@@ -1,6 +1,15 @@
 <%- include("partials/head.ejs") %>
 <%- include("partials/header.ejs") %>
-  <p><%= user.name.toUpperCase() %>'s favorites: <%= favorites.length %></p>
+<nav class="navbar navbar-expand-lg bg-body-tertiary"> 
+  <div class="container-fluid d-flex justify-content-end">
+      <div class="d-flex">
+        <a class="navbar-brand fs-5 text-success text-decoration-underline" href="/books">BooksList</a>   
+        <a class="navbar-brand fs-5 text-success text-decoration-underline" href="/books/favoriteList" > Favorites(<%= favorites.length %>)</a>
+      </div>
+      </div>
+  </nav>
+  <br/>
+  <br/>
 <div class="container">
  <div class="row">
 
@@ -14,7 +23,7 @@
         <button type="submit" class="btn btn-secondary align-self-center" disabled>One of favorites</button>
       <% } else { %>
         <form id="favoriteForm" action="/books/favorites/<%= book._id %>" method="POST">
-          <input type="hidden" name="_csrf" value="<%= _csrf %>">
+          <input type="hidden" name="_csrf" value="<%= _csrf %>"/>
           <button type="submit" id="favoriteButton" class="btn btn-success">Mark as Favorite</button>
         </form>
       <% } %>
@@ -33,11 +42,11 @@
                 <!-- Forms for deleting and editing the review -->
                 <% if (user && review.user._id.equals(user._id)) { %>
                   <form action="/books/review/<%= review._id %>/delete" method="POST">
-                    <input type="hidden" name="_csrf" value="<%= _csrf %>">
+                    <input type="hidden" name="_csrf" value="<%= _csrf %>"/>
                     <button type="submit" <% if (isEditing) { %>disabled<% } %>>Delete</button>
                   </form>
                   <form action="/books/review/<%= review._id %>/edit" method="POST">
-                    <input type="hidden" name="_csrf" value="<%= _csrf %>">
+                    <input type="hidden" name="_csrf" value="<%= _csrf %>"/>
                     <button type="submit" <% if (isEditing) { %>disabled<% } %>>Edit</button>
                             <% console.log(isEditing)%>
 
@@ -50,7 +59,7 @@
             <p>No reviews yet.</p>
           <% } %>
         </div>
-      </div>         
+      </div>   
   </div>
 
   <!-- Ratings Stars -->
@@ -71,17 +80,17 @@
     <% if (user) { %>
       <% if (typeof existingReview !== 'undefined' && existingReview !== null) { %>
       <!-- Editing existing review -->
-        <form action="/books/review/<%= existingReview._id %>/update" method="POST">
-          <input type="hidden" name="_csrf" value="<%= _csrf %>">
+        <form id="editReviewForm" action="/books/review/<%= existingReview._id %>/update" method="POST">
+          <input type="hidden" name="_csrf" value="<%= _csrf %>"/>
           <div class="mb-3">
-            <textarea class="form-control" id="comment" name="comment" rows="3" required><%= existingReview.comment %></textarea>
+            <textarea class="form-control" id="editComment" name="editComment" rows="3" required><%= existingReview.comment %></textarea>
           </div>
           <button type="submit" class="btn btn-success">Edit Review</button>
         </form>
       <% } else { %>    
       <!-- Adding new review -->
-      <form action="/books/review/<%= book._id %>" method="POST">
-        <input type="hidden" name="_csrf" value="<%= _csrf %>">
+      <form id="newReviewForm" action="/books/review/<%= book._id %>" method="POST">
+        <input type="hidden" name="_csrf" value="<%= _csrf %>"/>
         <div class="mb-3">
           <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
         </div>
@@ -93,5 +102,6 @@
 
  </div> 
 </div>  
+
 
 <%- include("partials/footer.ejs") %>

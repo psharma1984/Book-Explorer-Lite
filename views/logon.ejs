@@ -1,14 +1,14 @@
 <%- include("partials/head.ejs") %>
 <%- include("partials/header.ejs") %>
 <form method="POST">
-  <input type="hidden" name="_csrf" value="<%= _csrf %>">
+  <input type="hidden" name="_csrf" value="<%= _csrf %>" />
   <div class="mb-3">
-    <label class="form-label" name="email">Email address:</label>
-    <input class="form-control" name="email" placeholder="abc@example.com"/>
+    <label class="form-label" for="email">Email address:</label>
+    <input class="form-control" id="email" name="email" required/>
   </div>
   <div class="mb-3">
-    <label class="form-label" name="password">Enter your password:</label>
-    <input class="form-control" type="password" name="password" />
+    <label class="form-label" for="password">Enter your password:</label>
+    <input class="form-control" type="password" id="password" name="password" required/>
   </div>
   <div>
       <button class="btn btn-primary">Logon</button>
@@ -17,4 +17,5 @@
       </a>
   </div>
 </form>
+
 <%- include("partials/footer.ejs") %>
