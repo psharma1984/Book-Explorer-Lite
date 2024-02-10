@@ -10,7 +10,7 @@ This a simple web application for exploring and discovering books. It allows use
     Reviews: User can review a book, update or delete his review. User can see other people reviews for a particular book.
     
 ## Getting Started
-# Prerequisites
+## Prerequisites
 
 Before running the application, ensure you have the following dependencies installed:
     Node.js
