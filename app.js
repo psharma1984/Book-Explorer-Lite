@@ -139,13 +139,11 @@ const bookRouter = require('./routes/Book');
 app.use('/books', auth, bookRouter);
 
 // error handling middleware
-app.use((req, res) => {
-  res.status(404).send(`That page (${req.url}) was not found.`);
-});
+const notFoundMiddleware = require('./middlewares/notFoundMiddleware');
+const errorHandlerMiddleware = require('./middlewares/errorHandlerMiddleware');
 
-app.use((err, req, res) => {
-  res.status(500).send(err.message);
-});
+app.use(notFoundMiddleware);
+app.use(errorHandlerMiddleware);
 
 // Start the server
 const port = process.env.PORT || 3000;

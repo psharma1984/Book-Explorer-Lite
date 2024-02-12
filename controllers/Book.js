@@ -2,6 +2,7 @@ const Book = require('../models/Book');
 const Favorite = require('../models/Favorite');
 const Review = require('../models/Review');
 const parseValidationErrors = require('../utils/parseValidationErr');
+const errorHandlerMiddleware = require('../middlewares/errorHandlerMiddleware');
 
 const bookList = async (req, res) => {
   try {
@@ -26,14 +27,12 @@ const bookList = async (req, res) => {
       books, currentPage: page, totalPages, favorites,
     });
   } catch (error) {
-    console.error(error);
     // Handle validation errors if they occur
     if (error.name === 'ValidationError') {
       parseValidationErrors(error, req);
     } else {
-      req.flash('error', 'Error viewing booksList');
+      errorHandlerMiddleware(error, req, res);
     }
-    res.redirect('back');
   }
 };
 
@@ -57,16 +56,14 @@ const bookDetail = async (req, res) => {
     }
     res.render('bookDetail', { book, reviews, favorites });
   } catch (error) {
-    console.error(error);
     // Handle validation errors if they occur
     if (error.name === 'ValidationError') {
       parseValidationErrors(error, req);
     } else {
-      req.flash('error', 'Error displaying book details');
+      errorHandlerMiddleware(error, req, res);
     }
-    res.redirect('back');
   }
-}
+};
 
 const addTofavorites = async (req, res) => {
   try {
@@ -93,13 +90,11 @@ const addTofavorites = async (req, res) => {
     req.session.referringUrl = req.headers.referer || '/books';
     res.redirect(req.session.referringUrl); // Redirect back to the referring url
   } catch (error) {
-    console.error(error);
     if (error.name === 'ValidationError') {
       parseValidationErrors(error, req);
     } else {
-      req.flash('error', 'Error adding to favorites:Server Error');
+      errorHandlerMiddleware(error, req, res);
     }
-    res.redirect('back');
   }
 };
 
@@ -122,14 +117,12 @@ const deleteFavorite = async (req, res) => {
     req.session.referringUrl = req.headers.referer || '/books/favoriteList';
     res.redirect(req.session.referringUrl); // Redirect back to the referring url
   } catch (error) {
-    console.error(error);
     // Handle validation errors if they occur
     if (error.name === 'ValidationError') {
       parseValidationErrors(error, req);
     } else {
-      req.flash('error', 'Error deleting from favorites:Server Error');
+      errorHandlerMiddleware(error, req, res);
     }
-    res.redirect('back');
   }
 };
 
@@ -169,14 +162,12 @@ const searchBook = async (req, res) => {
       favorites,
     });
   } catch (error) {
-    console.error(error);
     // Handle validation errors if they occur
     if (error.name === 'ValidationError') {
       parseValidationErrors(error, req);
     } else {
-      req.flash('error', 'Error finding search results:Server Error');
+      errorHandlerMiddleware(error, req, res);
     }
-    res.redirect('back');
   }
 };
 
@@ -193,14 +184,12 @@ const favoriteList = async (req, res) => {
     }
     res.render('favoriteList', { results });
   } catch (error) {
-    console.log(error);
     // Handle validation errors if they occur
     if (error.name === 'ValidationError') {
       parseValidationErrors(error, req);
     } else {
-      req.flash('error', 'Error displaying favorites:Server Error');
+      errorHandlerMiddleware(error, req, res);
     }
-    res.redirect('back');
   }
 };
 
@@ -209,14 +198,12 @@ const featuredBooks = async (req, res) => {
     const books = await Book.aggregate([{ $sample: { size: 12 } }]);
     res.render('index', { books });
   } catch (error) {
-    console.error('Error fetching random books:', error);
     // Handle validation errors if they occur
     if (error.name === 'ValidationError') {
       parseValidationErrors(error, req);
     } else {
-      req.flash('error', 'Error finding featured books');
+      errorHandlerMiddleware(error, req, res);
     }
-    res.redirect('back');
   }
 };
 

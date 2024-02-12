@@ -2,6 +2,7 @@ const Review = require('../models/Review');
 const Book = require('../models/Book');
 const Favorite = require('../models/Favorite');
 const parseValidationErrors = require('../utils/parseValidationErr');
+const errorHandlerMiddleware = require('../middlewares/errorHandlerMiddleware');
 
 const createReview = async (req, res) => {
   try {
@@ -40,13 +41,11 @@ const createReview = async (req, res) => {
     req.flash('success', 'Review submitted successfully');
     res.redirect(`/books/${bookId}?success=Review submitted successfully`);
   } catch (error) {
-    console.error('Error creating review:', error);
     if (error.name === 'ValidationError') {
       parseValidationErrors(error, req);
     } else {
-      req.flash('error', 'Error creating/updating review');
+      errorHandlerMiddleware(error, req, res);
     }
-    res.redirect('back');
   }
 };
 
@@ -92,14 +91,12 @@ const deleteReview = async (req, res) => {
       book, success: req.flash('success'), reviews, favorites,
     });
   } catch (error) {
-    console.error('Error updating review:', error);
     // Handle validation errors if they occur
     if (error.name === 'ValidationError') {
       parseValidationErrors(error, req);
     } else {
-      req.flash('error', 'Error deleting review');
+      errorHandlerMiddleware(error, req, res);
     }
-    res.redirect('back'); // Redirect back to the referring URL
   }
 };
 
@@ -132,14 +129,12 @@ const editReview = async (req, res) => {
       isEditing: true, book, info: req.flash('info'), reviews, existingReview, favorites,
     });
   } catch (error) {
-    console.error('Error updating review:', error);
     // Handle validation errors if they occur
     if (error.name === 'ValidationError') {
       parseValidationErrors(error, req);
     } else {
-      req.flash('error', 'Error editing review');
+      errorHandlerMiddleware(error, req, res);
     }
-    res.redirect('back'); // Redirect back to the referring URL
   }
 };
 
@@ -172,14 +167,12 @@ const updateReview = async (req, res) => {
       book, success: req.flash('success'), reviews, favorites,
     });
   } catch (error) {
-    console.error('Error updating review:', error);
     // Handle validation errors if they occur
     if (error.name === 'ValidationError') {
       parseValidationErrors(error, req);
     } else {
-      req.flash('error', 'Error updating review');
+      errorHandlerMiddleware(error, req, res);
     }
-    res.redirect('back'); // Redirect back to the referring URL
   }
 };
 
