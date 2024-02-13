@@ -88,7 +88,7 @@ app.use(passport.session());
 const hostCsrf = require('host-csrf');
 
 // eslint-disable-next-line camelcase
-const csrf_development_mode = true;
+let csrf_development_mode = true;
 if (app.get('env') === 'production') {
   // eslint-disable-next-line no-const-assign, camelcase
   csrf_development_mode = false;
