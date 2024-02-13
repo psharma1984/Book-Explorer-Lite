@@ -1,4 +1,17 @@
 // eslint-disable-next-line no-unused-vars
+document.addEventListener('DOMContentLoaded', () => {
+  const searchForm = document.getElementById('searchForm');
+  if (searchForm) {
+    searchForm.addEventListener('submit', (event) => {
+      if (!validateSearch()) {
+        event.preventDefault(); // Prevent form submission if validation fails
+      }
+    });
+  } else {
+    console.error('Could not find searchForm element');
+  }
+});
+
 function validateSearch() {
   let searchValue = document.getElementById('searchInput').value.trim();
 

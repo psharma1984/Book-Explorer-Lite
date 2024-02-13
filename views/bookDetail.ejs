@@ -80,7 +80,7 @@
     <% if (user) { %>
       <% if (typeof existingReview !== 'undefined' && existingReview !== null) { %>
       <!-- Editing existing review -->
-        <form id="editReviewForm" action="/books/review/<%= existingReview._id %>/update" method="POST" onsubmit="return validateReview('editReviewForm')">
+        <form id="editReviewForm" action="/books/review/<%= existingReview._id %>/update" method="POST">
           <input type="hidden" name="_csrf" value="<%= _csrf %>"/>
           <div class="mb-3">
             <textarea class="form-control" id="editComment" name="editComment" rows="3" required><%= existingReview.comment %></textarea>
@@ -89,7 +89,7 @@
         </form>
       <% } else { %>    
       <!-- Adding new review -->
-      <form id="newReviewForm" action="/books/review/<%= book._id %>" method="POST"  onsubmit="return validateReview('newReviewForm')">
+      <form id="newReviewForm" action="/books/review/<%= book._id %>" method="POST">
         <input type="hidden" name="_csrf" value="<%= _csrf %>"/>
         <div class="mb-3">
           <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
@@ -102,6 +102,6 @@
 
  </div> 
 </div>  
-<script src="../scripts/validateReview.js"></script>
+<script src="/scripts/validateReview.js"></script>
 
 <%- include("partials/footer.ejs") %>

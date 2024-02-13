@@ -1,3 +1,24 @@
+document.addEventListener('DOMContentLoaded', () => {
+  const editReviewForm = document.getElementById('editReviewForm');
+  const newReviewForm = document.getElementById('newReviewForm');
+  if (editReviewForm) {
+    editReviewForm.addEventListener('submit', (event) => {
+      if (!validateReview('editReviewForm')) {
+        event.preventDefault(); // Prevent form submission if validation fails
+      }
+    });
+  }
+  else if (newReviewForm) {
+    newReviewForm.addEventListener('submit', (event) => {
+      if (!validateReview('newReviewForm')) {
+        event.preventDefault(); // Prevent form submission if validation fails
+      }
+    });
+  } else {
+    console.error('Could not find searchForm element');
+  }
+});
+
 // eslint-disable-next-line no-unused-vars
 function validateReview(formId) {
   let reviewValue = document.getElementById(formId === 'editReviewForm' ? 'editComment' : 'comment').value.trim();

@@ -31,7 +31,7 @@ app.use(
           'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css', 'https://kit.fontawesome.com/d38377c6d2.js',
           "'unsafe-inline'",
         ],
-        scriptSrcAttr: ["'self'", "'unsafe-inline'"],
+        scriptSrcAttr: ["'self'"],
         upgradeInsecureRequests: null,
       },
     },

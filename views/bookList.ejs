@@ -7,10 +7,10 @@
   <div class="container-fluid d-flex justify-content-end">
       <div class="d-flex">
     <a class="navbar-brand fs-5 text-success text-decoration-underline" href="/books/favoriteList" > Favorites</a>
-      <form class="d-flex" action="/books/search" method="POST" >
+      <form id="searchForm" class="d-flex" action="/books/search" method="POST">
         <input type="hidden" name="_csrf" value="<%= _csrf %>"/>
         <input type="text" class="form-control me-2" name="search" id="searchInput" placeholder="Search titles">  
-        <button class="btn btn-outline-success" type="submit" onclick = "return validateSearch()">Search</button>
+        <button class="btn btn-outline-success" type="submit">Search</button>
       </form>
       </div>
       </div>
