@@ -41,16 +41,16 @@
                 <pre> <%= comment %>...says <strong ><%= review.user.name %></strong></pre>
                 <!-- Forms for deleting and editing the review -->
                 <% if (user && review.user._id.equals(user._id)) { %>
-                  <form action="/books/review/<%= review._id %>/delete" method="POST">
+                <div class="d-flex">
+                  <form class="me-2" action="/books/review/<%= review._id %>/delete" method="POST">
                     <input type="hidden" name="_csrf" value="<%= _csrf %>"/>
-                    <button type="submit" <% if (isEditing) { %>disabled<% } %>>Delete</button>
+                    <button class="btn btn-danger btn-sm" type="submit" <% if (isEditing) { %>disabled<% } %>>Delete</button>
                   </form>
-                  <form action="/books/review/<%= review._id %>/edit" method="POST">
+                  <form class="me-2" action="/books/review/<%= review._id %>/edit" method="POST">
                     <input type="hidden" name="_csrf" value="<%= _csrf %>"/>
-                    <button type="submit" <% if (isEditing) { %>disabled<% } %>>Edit</button>
-                            <% console.log(isEditing)%>
-
+                    <button class="btn btn-success btn-sm" type="submit" <% if (isEditing) { %>disabled<% } %>>Edit</button>
                   </form>
+                  </div>
                 <% } %>
                 <hr />
               <% }); %>
@@ -102,6 +102,6 @@
 
  </div> 
 </div>  
-
+<script src="/scripts/validateReview.js"></script>
 
 <%- include("partials/footer.ejs") %>
