@@ -8,7 +8,11 @@ This a simple web application for exploring and discovering books. It allows use
     View Book Details: Detailed information about each book is displayed, including title, author, description, and cover image, reviews and ratings
     Save Favorites: Users can save their favorite books to a list for easy access later.
     Reviews: User can review a book, update or delete his review. User can see other people reviews for a particular book.
-    
+## Project Deployment
+
+This project is deployed and live on Render.com. You can access it using the following link:
+[View Deployed Project on Render.com](https://book-explorer-lite.onrender.com/)   
+
 ## Getting Started
 ## Prerequisites
 
